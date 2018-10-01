@@ -29,8 +29,7 @@ public class LHNetworkPlayer : NetworkBehaviour
     void Awake()
     {
         //在游戏管理器中注册，这将允许循环。
-        //LHNetworkGameManager.sPlayer.Add(this);
-        //Invoke("Init", 0.1f);
+        LHNetworkGameManager.sPlayer.Add(this);
     }
 
     private void Start()

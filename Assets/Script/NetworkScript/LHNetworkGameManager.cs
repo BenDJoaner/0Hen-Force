@@ -5,7 +5,7 @@ using UnityEngine.Networking;
 
 public class LHNetworkGameManager : NetworkBehaviour
 {
-    //static public List<LHNetworkPlayer> sPlayer = new List<LHNetworkPlayer>();
+    static public List<LHNetworkPlayer> sPlayer = new List<LHNetworkPlayer>();
     static public LHNetworkGameManager sInstance = null;
     public LHNetworkPlayer localPlayer;
 
@@ -27,10 +27,10 @@ public class LHNetworkGameManager : NetworkBehaviour
             StartCoroutine("TriggerSpawnCoroutine");
         }
 
-        //for (int i = 0; i < sPlayer.Count; ++i)
-        //{
+        // for (int i = 0; i < sPlayer.Count; ++i)
+        // {
         //    sPlayer[i].Init();
-        //}
+        // }
         
     }
 
@@ -51,7 +51,7 @@ public class LHNetworkGameManager : NetworkBehaviour
     public void Init(LHNetworkPlayer player)
     {
         localPlayer = player;
-        ui_select.Init(charListObj.CharList, localPlayer);
+        ui_select.Init(charListObj.GetAllList(), localPlayer);
         hasLocalPlayer = true;
     }
 
