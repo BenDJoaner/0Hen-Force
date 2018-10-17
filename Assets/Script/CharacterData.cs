@@ -10,41 +10,41 @@ using UnityEngine.Networking;
 public class CharacterData : MonoBehaviour
 {
     [Header("ID")]
-    public int charID=10001;
+    public int charID = 10001;
 
     [Header("头像")]
     public Sprite image;
 
     [Header("角色名")]
-    public string charName="无";
+    public string charName = "无";
 
     [Header("角色定位")]
     public PosEnum m_charPos;
 
     [Header("角色介绍")]
-    public string charDesc="无";
+    public string charDesc = "无";
 
     [Header("技能介绍")]
-    public string skillDesc="无";
+    public string skillDesc = "无";
 
     [Header("置空")]
     public bool airContorl;
 
     [Header("弹跳力")]
-    public int jumpForce=1500;
+    public int jumpForce = 1500;
 
     [Header("移动速度")]
-    public int moveSpeed=8;
+    public int moveSpeed = 8;
 
     [Header("重量")]
-    public int weight=6;
+    public int weight = 6;
 
     [Header("攻击前摇")]
     public float preAttackTime;
 
     [Header("攻击后摇")]
     public float AfterAttackTime;
-        //====================光环灵痕========================
+    //====================光环灵痕========================
     [Header("光环灵痕**********************")]
     public bool BuffModule;
 
@@ -62,7 +62,7 @@ public class CharacterData : MonoBehaviour
 
     [Header("光环预设体")]
     public GameObject BuffObj;
-        //====================守护灵痕========================
+    //====================守护灵痕========================
     [Header("守护灵痕**********************")]
     public bool SpriteModule;
 
@@ -77,7 +77,7 @@ public class CharacterData : MonoBehaviour
 
     [Header("守护预设体")]
     public GameObject EyeObj;
-        //====================精密灵痕========================
+    //====================精密灵痕========================
     [Header("精密灵痕**********************")]
     public bool ShooterModule;
 
@@ -95,13 +95,13 @@ public class CharacterData : MonoBehaviour
 
     [Header("抛射角度(方向不可控时)")]
     public float luanchAngle;
-    
+
     [Header("攻击冷却时间")]
     public float attackSpeed;
 
     [Header("子弹预设体")]
     public BulletData bullet;
-        //====================突围灵痕========================
+    //====================突围灵痕========================
     [Header("突围灵痕**********************")]
     public bool WarriourModule;
 
@@ -125,7 +125,7 @@ public class CharacterData : MonoBehaviour
 
     [Header("重力倍数")]
     public float WeightUp;
-        //====================鬼影灵痕========================
+    //====================鬼影灵痕========================
     [Header("鬼影灵痕**********************")]
     public bool GhostModule;
 
@@ -162,23 +162,23 @@ public class CharacterData : MonoBehaviour
 
     public enum EffectTo
     {
-        自己=0,
-        敌方=1,
-        我方=2,
-        双方=3
+        自己 = 0,
+        敌方 = 1,
+        我方 = 2,
+        双方 = 3
     }
 
     public enum AttackEffect
     {
-        击退=0,
-        击落=1,
-        魅惑=2,
-        恐惧=3,
-        晕眩=4,
-        禁锢=5,
-        减速=6,
-        虚空=7,
-        致盲=8
+        击退 = 0,
+        击落 = 1,
+        魅惑 = 2,
+        恐惧 = 3,
+        晕眩 = 4,
+        禁锢 = 5,
+        减速 = 6,
+        虚空 = 7,
+        致盲 = 8
     }
 
     //=============Override方法=================
@@ -193,21 +193,24 @@ public class CharacterData : MonoBehaviour
         GetComponent<Animator>().SetTrigger("hit");
     }
 
-    public virtual void OnMove(float speed){
-        GetComponent<Animator>().SetFloat("Speed",Mathf.Abs(speed));
+    public virtual void OnMove(float speed)
+    {
+        GetComponent<Animator>().SetFloat("Speed", Mathf.Abs(speed));
     }
 
 
-    public virtual void OnDead(){
+    public virtual void OnDead()
+    {
         //GetComponent<Animator>().SetTrigger("dead");
         Destroy(gameObject);
     }
 
-    public List<Transform> GetBornPosList(){
-        List<Transform> posList=new List<Transform>{};
+    public List<Transform> GetBornPosList()
+    {
+        List<Transform> posList = new List<Transform> { };
         foreach (Transform pos in gameObject.transform)
         {
-            if(pos.tag=="bornPos")
+            if (pos.tag == "bornPos")
                 posList.Add(pos);
         }
         return posList;

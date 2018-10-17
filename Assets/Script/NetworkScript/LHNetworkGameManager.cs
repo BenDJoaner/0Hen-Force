@@ -51,7 +51,7 @@ public class LHNetworkGameManager : NetworkBehaviour
     public void Init(LHNetworkPlayer player)
     {
         localPlayer = player;
-        ui_select.Init(charListObj.GetAllList(), localPlayer);
+        ui_select.Init(charListObj, localPlayer);
         hasLocalPlayer = true;
     }
 

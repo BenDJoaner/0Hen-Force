@@ -17,7 +17,7 @@ public class UISelectChar : MonoBehaviour
 
     LHNetworkPlayer LocalPlayer;
     LHNetworkGameManager manager;
-    List<CharacterData> CharList;//角色组
+    CharacterConfig charListObj;
     string[] PosList = new string[] { "迅捷", "强攻", "支援" };
     int PosIndex;
     CharacterData selectedChar=null ;//选择的角色
@@ -35,9 +35,9 @@ public class UISelectChar : MonoBehaviour
     /// </summary>
     /// <param name="arr"></param>
     /// <param name="_player"></param>
-    public void Init(List<CharacterData> arr, LHNetworkPlayer _player)
+    public void Init(CharacterConfig obj, LHNetworkPlayer _player)
     {
-        CharList = arr;
+        charListObj = obj;
         LocalPlayer = _player;
         OnSetArrData();
     }
@@ -49,7 +49,7 @@ public class UISelectChar : MonoBehaviour
     /// <param name="index"></param>
     public void OnSetArrData()
     {
-        if(CharList.Count<=0){
+        if(charListObj.GetAllList().Count<=0){
             Debug.LogError("没有角色数据！");
             return;
         }
@@ -61,23 +61,21 @@ public class UISelectChar : MonoBehaviour
         }
 
         List<CharacterData> tempArr = new List<CharacterData> { };
-        foreach (CharacterData data in CharList)
-        {
-            switch (PosIndex)
-            {
-                case 0:
-                    if (data.m_charPos == CharacterData.PosEnum.SLIPPY)
-                        tempArr.Add(data);
-                    break;
-                case 1:
-                    if (data.m_charPos == CharacterData.PosEnum.ATTACK)
-                        tempArr.Add(data);
-                    break;
-                case 2:
-                    if (data.m_charPos == CharacterData.PosEnum.SUPPORT)
-                        tempArr.Add(data);
-                    break;
-            }
+
+        switch(PosIndex){
+            case 0:
+                tempArr=charListObj.GetSlipyList();
+                break;
+            case 1:
+                tempArr=charListObj.GetAttackList();
+                break;
+            case 2:
+                tempArr=charListObj.GetSupportList();
+                break;
+            default:
+                Debug.LogError("无此类型角色："+PosIndex);
+                break;
+
         }
 
         //if (tempArr.Count >= 0) return;
@@ -116,11 +114,7 @@ public class UISelectChar : MonoBehaviour
     /// <param name="id"></param>
     public void SelectCharactorFunc(int id)
     {
-        foreach(CharacterData data in CharList)
-        {
-            if(data.charID== id)
-                selectedChar = data;
-        }
+        selectedChar=charListObj.GetCharByID(id);
         OnSetInfo(selectedChar);
     }
 
