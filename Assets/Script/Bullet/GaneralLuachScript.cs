@@ -5,28 +5,22 @@ using UnityEngine.Networking;
 
 public class GaneralLuachScript : NetworkBehaviour
 {
-    [Header("是否自生触发攻击效果")]
+    [FieldLabel("是否自生触发攻击效果")]
     public bool selfEffect;
     [HideInInspector]
     public int _teamFlag;
-    [SerializeField]
-    [Header("对队友有效")]
-    private bool _teamEffect;
-    [Header("强制位移目标")]
-    [SerializeField]
-    private float _forceTransSpeed;
-    [Header("当SelfEffect为false时必须有对象")]
+    [FieldLabel("对队友有效")]
+    public bool _teamEffect;
+    [FieldLabel("强制位移目标")]
+    public float _forceTransSpeed;
+    [FieldLabel("生产对象")]
     public GameObject effect;
-    [Header("当SelfEffect为ture时填写")]
-    [SerializeField]
-    [Header("作用时间")]
-    private float _effecTime;
-
-    [SerializeField]
-    private float _force;
-
-    [SerializeField]
-    private Color _color;
+    [FieldLabel("作用时间")]
+    public float _effecTime;
+    [FieldLabel("力度")]
+    public float _force;
+    [FieldLabel("变色")]
+    public Color _color;
 
     //public float speed=1;
     // Use this for initialization

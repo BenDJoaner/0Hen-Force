@@ -2,155 +2,164 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.Events;
 
 [RequireComponent(typeof(SpriteRenderer))]
 [RequireComponent(typeof(NetworkIdentity))]
 [RequireComponent(typeof(NetworkAnimator))]
 
+[AddComponentMenu("Character/CharacterData")]
 public class CharacterData : MonoBehaviour
 {
-    [Header("ID")]
-    public int charID = 10001;
+    public int id = 10001;
 
-    [Header("头像")]
     public Sprite image;
 
-    [Header("角色名")]
-    public string charName = "无";
+    [FieldLabel("角色名")]
+    public string charName;
 
-    [Header("角色定位")]
+    [FieldLabel("角色定位")]
     public PosEnum m_charPos;
 
-    [Header("角色介绍")]
-    public string charDesc = "无";
+    [FieldLabel("角色介绍")]
+    public string charDesc;
 
-    [Header("技能介绍")]
-    public string skillDesc = "无";
+    [FieldLabel("普通技能介绍")]
+    public string skillDesc;
 
-    [Header("置空")]
+    [FieldLabel("终极技能介绍")]
+    public string supperSkillDesc;
+
+    [FieldLabel("置空")]
     public bool airContorl;
 
-    [Header("弹跳力")]
-    public int jumpForce = 1500;
 
-    [Header("移动速度")]
-    public int moveSpeed = 8;
+    [FieldLabel("弹跳力")]
+    public int jumpForce;
 
-    [Header("重量")]
-    public int weight = 6;
+    [FieldLabel("移动速度")]
+    public int moveSpeed;
 
-    [Header("攻击前摇")]
+    [FieldLabel("重量")]
+    public int weight;
+
+    [FieldLabel("攻击前摇")]
     public float preAttackTime;
 
-    [Header("攻击后摇")]
+    [FieldLabel("攻击后摇")]
     public float AfterAttackTime;
     //====================光环灵痕========================
-    [Header("光环灵痕**********************")]
+    [FieldLabel("光环灵痕>>>>>>>>>>>>>>>>>")]
     public bool BuffModule;
 
-    [Header("作用于：")]
+    [FieldLabel("作用于：")]
     public EffectTo m_EffectTo;
 
-    [Header("作用时间(0为无限)")]
+    [FieldLabel("作用时间")]
     public float BuffTime;
 
-    [Header("飞行效果")]
+    [FieldLabel("飞行效果")]
     public GameObject FlyMode;
 
-    [Header("飞行速度")]
+    [FieldLabel("飞行速度")]
     public GameObject FlySpeed;
 
-    [Header("光环预设体")]
+    [FieldLabel("光环预设体")]
     public GameObject BuffObj;
     //====================守护灵痕========================
-    [Header("守护灵痕**********************")]
+    [FieldLabel("守护灵痕>>>>>>>>>>>>>>>>>")]
     public bool SpriteModule;
 
-    [Header("开始时生成")]
+    [FieldLabel("开始时生成")]
     public bool StartBorn;
 
-    [Header("无视重力")]
+    [FieldLabel("无视重力")]
     public bool IgnorGravity;
 
-    [Header("持续时间(0为无限)")]
+    [Tooltip("0为无限")]
+    [FieldLabel("持续时间")]
     public float ActiveTime;
 
-    [Header("守护预设体")]
+    [FieldLabel("守护预设体")]
     public GameObject EyeObj;
     //====================精密灵痕========================
-    [Header("精密灵痕**********************")]
+    [FieldLabel("精密灵痕>>>>>>>>>>>>>>>>>")]
     public bool ShooterModule;
 
-    [Header("自动瞄准")]
+    [FieldLabel("自动瞄准")]
     public bool AutoAim;
 
-    [Header("可控射击方向")]
+    [FieldLabel("可控射击方向")]
     public bool AimContorlable;
 
-    [Header("最大抛射力度(0为原地放置)")]
+    [FieldLabel("最大抛射力度")]
     public float luanchForce;
 
-    [Header("最大蓄力时间(0为瞬间抛出)")]
+    [Tooltip("0为无需蓄力")]
+    [FieldLabel("最大蓄力时间")]
     public float luanchTime;
 
-    [Header("抛射角度(方向不可控时)")]
+    [FieldLabel("抛射角度")]
     public float luanchAngle;
 
-    [Header("攻击冷却时间")]
+    [FieldLabel("攻击冷却时间")]
     public float attackSpeed;
 
-    [Header("子弹预设体")]
+    [FieldLabel("子弹预设体")]
     public BulletData bullet;
     //====================突围灵痕========================
-    [Header("突围灵痕**********************")]
+    [FieldLabel("突围灵痕>>>>>>>>>>>>>>>>>")]
     public bool WarriourModule;
 
-    [Header("前扑力度")]
+    [FieldLabel("前扑力度")]
     public float HugForce;
 
-    [Header("前扑角度")]
+    [FieldLabel("前扑角度")]
     public float HugAngle;
 
-    [Header("攻击力度")]
+    [FieldLabel("攻击力度")]
     public float HitForce;
 
-    [Header("攻击效果")]
+    [FieldLabel("攻击效果")]
     public AttackEffect m_Effect;
 
-    [Header("攻击作用时间")]
+    [FieldLabel("攻击作用时间")]
     public float EffectTime;
 
-    [Header("无视强位移")]
+    [FieldLabel("无视强位移")]
     public bool Invancible;
 
-    [Header("重力倍数")]
+    [FieldLabel("重力倍数")]
     public float WeightUp;
     //====================鬼影灵痕========================
-    [Header("鬼影灵痕**********************")]
+    [FieldLabel("鬼影灵痕>>>>>>>>>>>>>>>>>")]
     public bool GhostModule;
 
-    [Header("位移距离")]
+    [FieldLabel("位移距离")]
     public float SelfMoveDistend;
 
-    [Header("位移时间(0为瞬间到达)")]
+    [FieldLabel("位移时间")]
     public float SelfMoveTime;
 
-    [Header("可控位移方向")]
+    [FieldLabel("可控位移方向")]
     public bool MoveAngleContorlable;
 
-    [Header("位移的角度(方向不可控时)")]
+    [FieldLabel("位移的角度")]
     public float SelfMoveAngle;
 
-    [Header("隐身")]
+    [FieldLabel("隐身")]
     public bool SelfInvisible;
 
-    [Header("无视碰撞")]
+    [FieldLabel("隐身持续时间")]
+    public bool InvisibleTime;
+
+    [FieldLabel("无视碰撞")]
     public bool IgnorColleder;
 
-    [Header("移动速度倍数")]
+    [FieldLabel("移动速度倍数")]
     public float SpeedUp;
 
-    [Header("弹跳力倍数")]
+    [FieldLabel("弹跳力倍数")]
     public float JumpForceUp;
 
     public enum PosEnum

@@ -20,7 +20,7 @@ public class UISelectChar : MonoBehaviour
     CharacterConfig charListObj;
     string[] PosList = new string[] { "迅捷", "强攻", "支援" };
     int PosIndex;
-    CharacterData selectedChar=null ;//选择的角色
+    CharacterData selectedChar = null;//选择的角色
     // Use this for initialization
     void Start()
     {
@@ -49,31 +49,33 @@ public class UISelectChar : MonoBehaviour
     /// <param name="index"></param>
     public void OnSetArrData()
     {
-        if(charListObj.GetAllList().Count<=0){
+        if (charListObj.GetAllList().Count <= 0)
+        {
             Debug.LogError("没有角色数据！");
             return;
         }
         Pos.text = PosList[PosIndex];//定位文字
 
-        foreach(RectTransform chiled in CharTable)
+        foreach (RectTransform chiled in CharTable)
         {
             Destroy(chiled.gameObject);
         }
 
         List<CharacterData> tempArr = new List<CharacterData> { };
 
-        switch(PosIndex){
+        switch (PosIndex)
+        {
             case 0:
-                tempArr=charListObj.GetSlipyList();
+                tempArr = charListObj.GetSlipyList();
                 break;
             case 1:
-                tempArr=charListObj.GetAttackList();
+                tempArr = charListObj.GetAttackList();
                 break;
             case 2:
-                tempArr=charListObj.GetSupportList();
+                tempArr = charListObj.GetSupportList();
                 break;
             default:
-                Debug.LogError("无此类型角色："+PosIndex);
+                Debug.LogError("无此类型角色：" + PosIndex);
                 break;
 
         }
@@ -89,11 +91,11 @@ public class UISelectChar : MonoBehaviour
             CharBtn.image.sprite = data.image;
             CharBtn.onClick.AddListener(delegate ()
             {
-                SelectCharactorFunc(data.charID);
+                SelectCharactorFunc(data.id);
             });
         }
         //翻页默认选择第一个
-        SelectCharactorFunc(tempArr[0].charID);
+        SelectCharactorFunc(tempArr[0].id);
     }
 
     /// <summary>
@@ -114,7 +116,7 @@ public class UISelectChar : MonoBehaviour
     /// <param name="id"></param>
     public void SelectCharactorFunc(int id)
     {
-        selectedChar=charListObj.GetCharByID(id);
+        selectedChar = charListObj.GetCharByID(id);
         OnSetInfo(selectedChar);
     }
 
@@ -130,7 +132,7 @@ public class UISelectChar : MonoBehaviour
     /// <returns></returns>
     public int GetCharID()
     {
-        return selectedChar.charID;
+        return selectedChar.id;
     }
 
     /// <summary>
