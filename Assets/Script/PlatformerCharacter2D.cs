@@ -6,10 +6,10 @@ using UnityEngine.Networking;
 public class PlatformerCharacter2D : NetworkBehaviour
 {
     [SerializeField] private float m_MaxSpeed = 10f;                   //玩家可以在x轴上行进的最快速度。
-    [SerializeField] private float m_JumpForce = 400f;                  //玩家跳跃时增加的力量。
-    [SerializeField] private bool m_AirControl = false;                 //玩家是否可以在跳跃时转向;
-    [SerializeField] private LayerMask m_WhatIsGround;                //一个掩码，用于确定角色的基础
-    [SerializeField] public bool controlabel = true;                             //可以控制
+    [SerializeField] private float m_JumpForce = 400f;                 //玩家跳跃时增加的力量。
+    [SerializeField] private bool m_AirControl = false;                //玩家是否可以在跳跃时转向;
+    [SerializeField] private LayerMask m_WhatIsGround;                 //一个掩码，用于确定角色的基础
+    [SerializeField] public bool controlabel = true;                   //可以控制
 
     private Transform m_GroundCheck;   //位置标记在哪里检查玩家是否接地。
     const float k_GroundedRadius = .2f; //重叠圆的半径以确定是否接地
