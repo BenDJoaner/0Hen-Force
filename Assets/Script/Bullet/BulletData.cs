@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 [RequireComponent(typeof(Rigidbody2D))]
-public class BulletData : MonoBehaviour
+public class BulletData : NetworkBehaviour
 {
     [FieldLabel("作用效果")]
     public AttackEffect m_Effect;
@@ -79,7 +79,7 @@ public class BulletData : MonoBehaviour
             {
                 if (collision.gameObject.GetComponent<LHNetworkPlayer>().team == _teamFlag && !TeamEffect) return;
                 //传入 作用时间，作用点坐标，作用力，颜色
-                charecter.PlayerUncontrol(_forceTransSpeed, GetComponent<CircleCollider2D>().radius, _effecTime, transform.position, _force, _color);
+                // charecter.PlayerUncontrol(_forceTransSpeed, GetComponent<CircleCollider2D>().radius, _effecTime, transform.position, _force, _color);
                 Destroy(gameObject);
             }
         }

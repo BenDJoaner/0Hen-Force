@@ -30,8 +30,9 @@ public class LHNetworkGameManager : NetworkBehaviour
         // for (int i = 0; i < sPlayer.Count; ++i)
         // {
         //    sPlayer[i].Init();
-        // }
-        
+        // }game
+        ui_select.gameObject.SetActive(true);
+
     }
 
     [ServerCallback]
