@@ -6,7 +6,8 @@ using UnityEngine.Networking;
 [RequireComponent(typeof(Rigidbody2D))]
 public class BulletData : NetworkBehaviour
 {
-    [FieldLabel("作用效果")]
+    [Tooltip("1,REPEL-击退：对目标产生强位移\n2,CHARM-魅惑：目标向攻击者移动(受损)\n3,FEAR-恐惧：目标远离攻击者移动(受损)\n4,CONFINE-禁锢：目标不能移动\n5,DECELERATE-减速：目标移动速度受损\n6,CONGEAL-凝滞：目标无法操作和选中")]
+    [FieldLabel("攻击效果")]
     public AttackEffect m_Effect;
 
     [FieldLabel("生命周期")]
@@ -45,6 +46,8 @@ public class BulletData : NetworkBehaviour
     [HideInInspector]
     public LHNetworkPlayer _borner;//发射者
 
+    public Transform followTarget;//跟踪目标，null为不跟踪
+
     void Start()
     {
         Destroy(gameObject, LifeTime);
@@ -52,15 +55,12 @@ public class BulletData : NetworkBehaviour
 
     public enum AttackEffect
     {
-        击退 = 0,
-        击落 = 1,
-        魅惑 = 2,
-        恐惧 = 3,
-        晕眩 = 4,
-        禁锢 = 5,
-        减速 = 6,
-        虚空 = 7,
-        致盲 = 8
+        REPEL = 1,          //击退
+        CHARM = 2,          //魅惑
+        FEAR = 3,           //恐惧
+        CONFINE = 4,        //禁锢
+        DECELERATE = 5,     //减速
+        CONGEAL = 6,        //凝滞
     }
 
     [ClientCallback]
