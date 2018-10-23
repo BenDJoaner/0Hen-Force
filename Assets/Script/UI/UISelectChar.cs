@@ -66,18 +66,17 @@ public class UISelectChar : MonoBehaviour
         switch (PosIndex)
         {
             case 0:
-                tempArr = charListObj.GetSlipyList();
+                tempArr = charListObj.GetCharListByPos(CharacterData.PosEnum.SLIPPY);
                 break;
             case 1:
-                tempArr = charListObj.GetAttackList();
+                tempArr = charListObj.GetCharListByPos(CharacterData.PosEnum.ATTACK);
                 break;
             case 2:
-                tempArr = charListObj.GetSupportList();
+                tempArr = charListObj.GetCharListByPos(CharacterData.PosEnum.SUPPORT);
                 break;
-            default:
-                Debug.LogError("无此类型角色：" + PosIndex);
-                break;
-
+                // default:
+                //     Debug.LogError("无此类型角色：" + PosIndex);
+                //     break;
         }
 
         //if (tempArr.Count >= 0) return;

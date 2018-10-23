@@ -13,37 +13,12 @@ public class CharacterConfig : MonoBehaviour
         return CharList;
     }
 
-    public List<CharacterData> GetSlipyList()
+    public List<CharacterData> GetCharListByPos(CharacterData.PosEnum pos)
     {
         List<CharacterData> arr = new List<CharacterData> { };
         foreach (CharacterData item in CharList)
         {
-            if (item.m_charPos == CharacterData.PosEnum.SLIPPY)
-            {
-                arr.Add(item);
-            }
-        }
-        return arr;
-    }
-
-    public List<CharacterData> GetAttackList()
-    {
-        List<CharacterData> arr = new List<CharacterData> { };
-        foreach (CharacterData item in CharList)
-        {
-            if (item.m_charPos == CharacterData.PosEnum.ATTACK)
-            {
-                arr.Add(item);
-            }
-        }
-        return arr;
-    }
-    public List<CharacterData> GetSupportList()
-    {
-        List<CharacterData> arr = new List<CharacterData> { };
-        foreach (CharacterData item in CharList)
-        {
-            if (item.m_charPos == CharacterData.PosEnum.SUPPORT)
+            if (item.m_charPos == pos)
             {
                 arr.Add(item);
             }
