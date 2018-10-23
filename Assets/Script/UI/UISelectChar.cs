@@ -16,7 +16,7 @@ public class UISelectChar : MonoBehaviour
     public Button useCharBtn;
 
     LHNetworkPlayer LocalPlayer;
-    LHNetworkGameManager manager;
+    // LHNetworkGameManager manager;
     CharacterConfig charListObj;
     string[] PosList = new string[] { "迅捷", "强攻", "支援" };
     int PosIndex;
@@ -24,7 +24,7 @@ public class UISelectChar : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        manager = GetComponent<LHNetworkGameManager>();
+        // manager = GetComponent<LHNetworkGameManager>();
         formPageBtn.onClick.AddListener(FromtPage);
         backPageBtn.onClick.AddListener(BackPange);
         useCharBtn.onClick.AddListener(OnClickeUseChar);
@@ -66,18 +66,17 @@ public class UISelectChar : MonoBehaviour
         switch (PosIndex)
         {
             case 0:
-                tempArr = charListObj.GetSlipyList();
+                tempArr = charListObj.GetCharListByPos(CharacterData.PosEnum.SLIPPY);
                 break;
             case 1:
-                tempArr = charListObj.GetAttackList();
+                tempArr = charListObj.GetCharListByPos(CharacterData.PosEnum.ATTACK);
                 break;
             case 2:
-                tempArr = charListObj.GetSupportList();
+                tempArr = charListObj.GetCharListByPos(CharacterData.PosEnum.SUPPORT);
                 break;
-            default:
-                Debug.LogError("无此类型角色：" + PosIndex);
-                break;
-
+                // default:
+                //     Debug.LogError("无此类型角色：" + PosIndex);
+                //     break;
         }
 
         //if (tempArr.Count >= 0) return;
@@ -104,10 +103,11 @@ public class UISelectChar : MonoBehaviour
     /// <param name="data"></param>
     void OnSetInfo(CharacterData data)
     {
-        Name.text = data.name;
+        print("根据设置角色相关信息:" + data.charName);
+        Name.text = data.charName;
         CharIcon.sprite = data.image;
         Desc.text = data.charDesc;
-        Skill.text = data.skillDesc;
+        Skill.text = data.skillDesc + "\n" + data.supperSkillDesc;
     }
 
     /// <summary>
@@ -117,6 +117,7 @@ public class UISelectChar : MonoBehaviour
     public void SelectCharactorFunc(int id)
     {
         selectedChar = charListObj.GetCharByID(id);
+        print("点击选择角色:" + id);
         OnSetInfo(selectedChar);
     }
 
