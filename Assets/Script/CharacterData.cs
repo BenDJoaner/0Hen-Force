@@ -7,8 +7,8 @@ using UnityEngine.Events;
 [RequireComponent(typeof(SpriteRenderer))]
 [RequireComponent(typeof(NetworkIdentity))]
 [RequireComponent(typeof(NetworkAnimator))]
-
-[AddComponentMenu("Character/CharacterData")]
+[ExecuteInEditMode]
+// [AddComponentMenu("Character/CharacterData")]
 public class CharacterData : MonoBehaviour
 {
     public int id = 10001;
@@ -33,7 +33,6 @@ public class CharacterData : MonoBehaviour
     [FieldLabel("置空")]
     public bool airContorl;
 
-
     [FieldLabel("弹跳力")]
     public int jumpForce;
 
@@ -48,9 +47,11 @@ public class CharacterData : MonoBehaviour
 
     [FieldLabel("攻击后摇")]
     public float AfterAttackTime;
-    //====================光环灵痕========================
-    [FieldLabel("光环灵痕>>>>>>>>>>>>>>>>>")]
-    public bool BuffModule;
+    //====================守护灵痕========================
+    [Space]
+    [Tooltip("灵痕简介：产生范围作用")]
+    [FieldLabel("守护灵痕>>>>>>>>>>>>>>>>>")]
+    public bool SpriteModule;
 
     [FieldLabel("作用于：")]
     public EffectTo m_EffectTo;
@@ -66,15 +67,12 @@ public class CharacterData : MonoBehaviour
 
     [FieldLabel("光环预设体")]
     public GameObject BuffObj;
-    //====================守护灵痕========================
-    [FieldLabel("守护灵痕>>>>>>>>>>>>>>>>>")]
-    public bool SpriteModule;
 
     [FieldLabel("开始时生成")]
     public bool StartBorn;
 
-    [FieldLabel("无视重力")]
-    public bool IgnorGravity;
+    [FieldLabel("作用范围")]
+    public float EffectRadius;
 
     [Tooltip("0为无限")]
     [FieldLabel("持续时间")]
@@ -83,6 +81,8 @@ public class CharacterData : MonoBehaviour
     [FieldLabel("守护预设体")]
     public GameObject EyeObj;
     //====================精密灵痕========================
+    [Space]
+    [Tooltip("灵痕简介：精准地向外抛射子弹")]
     [FieldLabel("精密灵痕>>>>>>>>>>>>>>>>>")]
     public bool ShooterModule;
 
@@ -108,6 +108,8 @@ public class CharacterData : MonoBehaviour
     [FieldLabel("子弹预设体")]
     public BulletData bullet;
     //====================突围灵痕========================
+    [Space]
+    [Tooltip("灵痕简介：本身就是战斗机器")]
     [FieldLabel("突围灵痕>>>>>>>>>>>>>>>>>")]
     public bool WarriourModule;
 
@@ -132,6 +134,8 @@ public class CharacterData : MonoBehaviour
     [FieldLabel("重力倍数")]
     public float WeightUp;
     //====================鬼影灵痕========================
+    [Space]
+    [Tooltip("灵痕简介：拥有神出鬼没的能力")]
     [FieldLabel("鬼影灵痕>>>>>>>>>>>>>>>>>")]
     public bool GhostModule;
 
@@ -155,6 +159,9 @@ public class CharacterData : MonoBehaviour
 
     [FieldLabel("无视碰撞")]
     public bool IgnorColleder;
+
+    [FieldLabel("无视重力")]
+    public bool IgnorGravity;
 
     [FieldLabel("移动速度倍数")]
     public float SpeedUp;
@@ -214,14 +221,44 @@ public class CharacterData : MonoBehaviour
         Destroy(gameObject);
     }
 
-    public List<Transform> GetBornPosList()
+    public List<Parabola> GetBornPosList()
     {
-        List<Transform> posList = new List<Transform> { };
-        foreach (Transform pos in gameObject.transform)
+        List<Parabola> posList = new List<Parabola> { };
+        foreach (Parabola pos in gameObject.transform)
         {
             if (pos.tag == "bornPos")
                 posList.Add(pos);
         }
         return posList;
+    }
+
+    public void OnRenderObject()
+    {
+        DrawCircle(transform, transform.position, EffectRadius);
+    }
+
+    public static void DrawCircle(Transform t, Vector3 center, float radius)
+    {
+        LineRenderer lr = GetLineRenderer(t);
+        int pointAmount = 100;//点的数目，值越大曲线越平滑  
+        float eachAngle = 360f / pointAmount;
+        Vector3 right = t.right;
+        lr.SetVertexCount(pointAmount + 1);
+        for (int i = 0; i <= pointAmount; i++)
+        {
+            Vector3 pos = Quaternion.Euler(0f, 0f, eachAngle * i) * right * radius + center;
+            lr.SetPosition(i, pos);
+        }
+    }
+
+    private static LineRenderer GetLineRenderer(Transform t)
+    {
+        LineRenderer lr = t.GetComponent<LineRenderer>();
+        if (lr == null)
+        {
+            lr = t.gameObject.AddComponent<LineRenderer>();
+        }
+        lr.SetWidth(0.03f, 0.03f);
+        return lr;
     }
 }
