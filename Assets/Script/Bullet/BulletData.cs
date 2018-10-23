@@ -12,10 +12,10 @@ public class BulletData : NetworkBehaviour
     [FieldLabel("生命周期")]
     public float LifeTime;
 
-    [FieldLabel("载体")]
+    [FieldLabel("是载体")]
     public bool IsCarryer;
 
-    [FieldLabel("载体")]
+    [FieldLabel("生成物")]
     public BulletData BornBullet;
 
     [FieldLabel("对队友有效")]
@@ -43,7 +43,7 @@ public class BulletData : NetworkBehaviour
     public bool CrossOver;
 
     [HideInInspector]
-    public int _teamFlag;//传入队伍参数
+    public LHNetworkPlayer _borner;//发射者
 
     void Start()
     {
@@ -66,6 +66,7 @@ public class BulletData : NetworkBehaviour
     [ClientCallback]
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        GameObject other = collision.gameObject;
         if (IsCarryer)
         {
             GameObject bullet = Instantiate(BornBullet.gameObject, transform.position, Quaternion.identity);
@@ -74,10 +75,10 @@ public class BulletData : NetworkBehaviour
         }
         else
         {
-            PlatformerCharacter2D charecter = collision.gameObject.GetComponent<PlatformerCharacter2D>();
+            PlatformerCharacter2D charecter = other.GetComponent<PlatformerCharacter2D>();
             if (charecter)
             {
-                if (collision.gameObject.GetComponent<LHNetworkPlayer>().team == _teamFlag && !TeamEffect) return;
+                if (other.GetComponent<LHNetworkPlayer>().team == _borner.team && !TeamEffect) return;
                 //传入 作用时间，作用点坐标，作用力，颜色
                 // charecter.PlayerUncontrol(_forceTransSpeed, GetComponent<CircleCollider2D>().radius, _effecTime, transform.position, _force, _color);
                 Destroy(gameObject);

@@ -56,7 +56,7 @@ public class CharacterConfig : MonoBehaviour
         CharacterData temp = null;
         foreach (CharacterData item in CharList)
         {
-            if (item.m_charPos == CharacterData.PosEnum.SUPPORT)
+            if (item.id == id)
             {
                 temp = item;
                 break;

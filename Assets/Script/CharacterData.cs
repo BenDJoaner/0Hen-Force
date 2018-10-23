@@ -30,7 +30,7 @@ public class CharacterData : MonoBehaviour
     [FieldLabel("终极技能介绍")]
     public string supperSkillDesc;
 
-    [FieldLabel("置空")]
+    [FieldLabel("空中控制")]
     public bool airContorl;
 
     [FieldLabel("弹跳力")]
