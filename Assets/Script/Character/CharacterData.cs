@@ -11,7 +11,7 @@ using UnityEngine.Events;
 // [AddComponentMenu("Character/CharacterData")]
 public class CharacterData : MonoBehaviour
 {
-    public int id = 10001;
+    public int id;
 
     public Sprite image;
 
@@ -174,6 +174,12 @@ public class CharacterData : MonoBehaviour
         CONFINE = 4,        //禁锢
         DECELERATE = 5,     //减速
         CONGEAL = 6,        //凝滞
+    }
+
+    //=============获取各种东西的方法=================
+    public Animator OnGetAnimator()
+    {
+        return GetComponent<Animator>();
     }
 
     //=============Override方法=================

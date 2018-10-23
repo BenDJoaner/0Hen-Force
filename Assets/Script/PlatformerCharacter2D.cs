@@ -5,25 +5,25 @@ using UnityEngine.Networking;
 
 public class PlatformerCharacter2D : NetworkBehaviour
 {
-    [SerializeField] private float m_MaxSpeed = 10f;                   //Íæ¼Ò¿ÉÒÔÔÚxÖáÉÏÐÐ½øµÄ×î¿ìËÙ¶È¡£
-    [SerializeField] private float m_JumpForce = 400f;                 //Íæ¼ÒÌøÔ¾Ê±Ôö¼ÓµÄÁ¦Á¿¡£
-    [SerializeField] private bool m_AirControl = false;                //Íæ¼ÒÊÇ·ñ¿ÉÒÔÔÚÌøÔ¾Ê±×ªÏò;
-    [SerializeField] private LayerMask m_WhatIsGround;                 //Ò»¸öÑÚÂë£¬ÓÃÓÚÈ·¶¨½ÇÉ«µÄ»ù´¡
-    [SerializeField] public bool controlabel = true;                   //¿ÉÒÔ¿ØÖÆ
+    [SerializeField] private float m_MaxSpeed = 10f;                   //ï¿½ï¿½Ò¿ï¿½ï¿½ï¿½ï¿½ï¿½xï¿½ï¿½ï¿½ï¿½ï¿½Ð½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ù¶È¡ï¿½
+    [SerializeField] private float m_JumpForce = 400f;                 //ï¿½ï¿½ï¿½ï¿½ï¿½Ô¾Ê±ï¿½ï¿½ï¿½Óµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    [SerializeField] private bool m_AirControl = false;                //ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¾Ê±×ªï¿½ï¿½;
+    [SerializeField] private LayerMask m_WhatIsGround;                 //Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ë£¬ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½ï¿½ï¿½É«ï¿½Ä»ï¿½ï¿½ï¿½
+    [SerializeField] public bool controlabel = true;                   //ï¿½ï¿½ï¿½Ô¿ï¿½ï¿½ï¿½
 
-    private Transform m_GroundCheck;   //Î»ÖÃ±ê¼ÇÔÚÄÄÀï¼ì²éÍæ¼ÒÊÇ·ñ½ÓµØ¡£
-    const float k_GroundedRadius = .2f; //ÖØµþÔ²µÄ°ë¾¶ÒÔÈ·¶¨ÊÇ·ñ½ÓµØ
-    public bool m_Grounded;            //²¥·ÅÆ÷ÊÇ·ñ½ÓµØ¡£
-    const float k_CeilingRadius = .01f; //ÖØµþÔ²µÄ°ë¾¶£¬ÒÔÈ·¶¨Íæ¼ÒÊÇ·ñ¿ÉÒÔÕ¾ÆðÀ´
-    private Animator m_Anim;           //ÒýÓÃÍæ¼ÒµÄ¶¯»­¹¹¼þ¡£
+    private Transform m_GroundCheck;   //Î»ï¿½Ã±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ÓµØ¡ï¿½
+    const float k_GroundedRadius = .2f; //ï¿½Øµï¿½Ô²ï¿½Ä°ë¾¶ï¿½ï¿½È·ï¿½ï¿½ï¿½Ç·ï¿½Óµï¿½
+    public bool m_Grounded;            //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ÓµØ¡ï¿½
+    const float k_CeilingRadius = .01f; //ï¿½Øµï¿½Ô²ï¿½Ä°ë¾¶ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½ï¿½ï¿½Õ¾ï¿½ï¿½ï¿½ï¿½
+    private Animator m_Anim;           //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÒµÄ¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     private Rigidbody2D m_Rigidbody2D;
     [SyncVar]
-    private bool m_FacingRight = true; //ÓÃÓÚÈ·¶¨Íæ¼Òµ±Ç°Ãæ¶ÔµÄ·½Ê½¡£
+    private bool m_FacingRight = true; //ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½ï¿½ï¿½Òµï¿½Ç°ï¿½ï¿½ÔµÄ·ï¿½Ê½ï¿½ï¿½
     private float uncontrolTime = 0;
     private SpriteRenderer _render;
 
     [SyncVar(hook = "OnMyColor")]
-    public Color _color;//½ÇÉ«·¢ÉúÌØÊâ±ä»¯Ê±ºòÍ¬²½µ½¸÷¸ö¿Í»§¶Ë
+    public Color _color;//ï¿½ï¿½É«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ä»¯Ê±ï¿½ï¿½Í¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í»ï¿½ï¿½ï¿½
     [SyncVar(hook = "OnMyRote")]
     public Quaternion selfRote;
     [SyncVar(hook = "OnWalkParticel")]
@@ -36,7 +36,7 @@ public class PlatformerCharacter2D : NetworkBehaviour
 
     private void Awake()
     {
-        //ÉèÖÃ²Î¿¼¡£
+        //ï¿½ï¿½ï¿½Ã²Î¿ï¿½ï¿½ï¿½
         m_GroundCheck = transform.Find("GroundCheck");
         m_Rigidbody2D = GetComponent<Rigidbody2D>();
     }
@@ -49,8 +49,8 @@ public class PlatformerCharacter2D : NetworkBehaviour
 
         m_Grounded = false;
 
-        //Èç¹ûµ½´ïµØÃæ¼ì²éÎ»ÖÃµÄ·ÉÐÐÔ±»÷ÖÐÈÎºÎÖ¸¶¨ÎªµØÃæµÄÎïÌå£¬Ôò¸ÃÍæ¼ÒÍ£·É
-        //Õâ¿ÉÒÔÊ¹ÓÃÍ¼²ãÀ´Íê³É£¬µ«Sample Assets²»»á¸²¸ÇÄúµÄÏîÄ¿ÉèÖÃ¡£
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î»ï¿½ÃµÄ·ï¿½ï¿½ï¿½Ô±ï¿½ï¿½ï¿½ï¿½ï¿½Îºï¿½Ö¸ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½å£¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í£ï¿½ï¿½
+        //ï¿½ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½ï¿½Í¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É£ï¿½ï¿½ï¿½Sample Assetsï¿½ï¿½ï¿½á¸²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½ï¿½Ã¡ï¿½
         Collider2D[] colliders = Physics2D.OverlapCircleAll(m_GroundCheck.position, k_GroundedRadius, m_WhatIsGround);
         for (int i = 0; i < colliders.Length; i++)
         {
@@ -61,7 +61,7 @@ public class PlatformerCharacter2D : NetworkBehaviour
         }
         CmdBoolAnim("Ground", m_Grounded);
 
-        //ÉèÖÃ´¹Ö±¶¯»­
+        //ï¿½ï¿½ï¿½Ã´ï¿½Ö±ï¿½ï¿½ï¿½ï¿½
         CmdNumAnim("vSpeed", m_Rigidbody2D.velocity.y);
 
         if (!_render) _render = GetComponentInChildren<SpriteRenderer>();
@@ -97,20 +97,20 @@ public class PlatformerCharacter2D : NetworkBehaviour
     {
 
         if (!initDone) return;
-        //Ö»ÓÐÔÚ½ÓµØ»òairControl´ò¿ªÊ±²ÅÄÜ¿ØÖÆ²¥·ÅÆ÷
+        //Ö»ï¿½ï¿½ï¿½Ú½ÓµØ»ï¿½airControlï¿½ï¿½Ê±ï¿½ï¿½ï¿½Ü¿ï¿½ï¿½Æ²ï¿½ï¿½ï¿½ï¿½ï¿½
         if (controlabel)
         {
-            if (!isLocalPlayer) return;  //ÅÐ¶ÏÊÇ·ñÊÇ±¾µØ¿Í»§¶Ë
+            if (!isLocalPlayer) return;  //ï¿½Ð¶ï¿½ï¿½Ç·ï¿½ï¿½Ç±ï¿½ï¿½Ø¿Í»ï¿½ï¿½ï¿½
             if (m_Grounded || m_AirControl)
             {
-                // Speed animator²ÎÊýÉèÖÃÎªË®Æ½ÊäÈëµÄ¾ø¶ÔÖµ¡£
+                // Speed animatorï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÎªË®Æ½ï¿½ï¿½ï¿½ï¿½Ä¾ï¿½ï¿½ï¿½Öµï¿½ï¿½
                 CmdNumAnim("Speed", Mathf.Abs(move));
-                //ÒÆ¶¯½ÇÉ«
+                //ï¿½Æ¶ï¿½ï¿½ï¿½É«
                 m_Rigidbody2D.velocity = new Vector2(move * m_MaxSpeed, m_Rigidbody2D.velocity.y);
 
                 _walkParticel = move != 0;
 
-                //Èç¹ûÊäÈëÕýÔÚÏòÓÒÒÆ¶¯²¥·ÅÆ÷²¢ÇÒ²¥·ÅÆ÷³¯Ïò×ó²à...
+                //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½...
                 if (move > 0 && !m_FacingRight)
                 {
                     // ... flip the player.
@@ -120,7 +120,7 @@ public class PlatformerCharacter2D : NetworkBehaviour
                     transform.eulerAngles = new Vector3(0, 0, 0);
                     selfRote = transform.rotation;
                 }
-                //·ñÔò£¬Èç¹ûÊäÈëÕýÔÚÒÆ¶¯£¬Ôò²¥·ÅÆ÷Àë¿ª²¢ÇÒ²¥·ÅÆ÷Õý¶Ô×Å...
+                //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½ï¿½ï¿½ï¿½ò²¥·ï¿½ï¿½ï¿½ï¿½ë¿ªï¿½ï¿½ï¿½Ò²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½...
                 else if (move < 0 && m_FacingRight)
                 {
                     // ... flip the player.
@@ -131,10 +131,10 @@ public class PlatformerCharacter2D : NetworkBehaviour
                     selfRote = transform.rotation;
                 }
             }
-            //Èç¹ûÍæ¼ÒÓ¦¸ÃÌøÔ¾...
+            //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¦ï¿½ï¿½ï¿½ï¿½Ô¾...
             if (m_Grounded && jump)
             {
-                // ¡£
+                // ï¿½ï¿½
                 m_Grounded = false;
                 CmdBoolAnim("Ground", false);
                 m_Rigidbody2D.AddForce(new Vector2(0f, m_JumpForce));
@@ -158,13 +158,13 @@ public class PlatformerCharacter2D : NetworkBehaviour
     }
 
     /// <summary>
-    /// Ê¹Íæ¼ÒÊ§È¥¿ØÖÆ£¬²¢¶ÔÆä²úÉúÀïµÄ×÷ÓÃ
+    /// Ê¹ï¿½ï¿½ï¿½Ê§È¥ï¿½ï¿½ï¿½Æ£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     /// </summary>
-    /// <param name="Radiu">×÷ÓÃÁ¦°ë¾¶</param>
-    /// <param name="time">×÷ÓÃÊ±¼ä</param>
-    /// <param name="effectPoint">×÷ÓÃÖÐÐÄµã</param>
-    /// <param name="force">×÷ÓÃÁ¦£¨ÕýÊýÊ±ÏòÍâµ¯£¬¸ºÊýÊ±ÏòÖÐÐÄÎü£©</param>
-    /// <param name="color">½ÇÉ«ÔÚ´Î×÷ÓÃÏÂµÄÑÕÉ«</param>
+    /// <param name="Radiu">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ë¾¶</param>
+    /// <param name="time">ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½</param>
+    /// <param name="effectPoint">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Äµï¿½</param>
+    /// <param name="force">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½âµ¯ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</param>
+    /// <param name="color">ï¿½ï¿½É«ï¿½Ú´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Âµï¿½ï¿½ï¿½É«</param>
     public void PlayerUncontrol(float forceTransSpeed, float Radiu, float time, Vector3 effectPoint, float force, Color color)
     {
         CmdPlayerUnControl(forceTransSpeed, Radiu, time, effectPoint, force, color);
@@ -177,22 +177,22 @@ public class PlatformerCharacter2D : NetworkBehaviour
     [ClientRpc]
     void RpcPlayerUncontrol(float forceTransSpeed, float Radiu, float time, Vector3 effectPoint, float force, Color color)
     {
-        controlabel = false;//±»»÷ÖÐflag
-        uncontrolTime = time;//×÷ÓÃÊ±¼ä
-        _color = color;//±äÉ«
-        Radiu += 0.5f;//°ë¾¶ÐÞÕý
-        Vector3 uniteVector = transform.position - effectPoint;//»ñµÃ×÷ÓÃÖÐÐÄµ½×Ô¼ºµÄ·½ÏòÏòÁ¿
-        uniteVector = uniteVector.normalized;//°Ñ·½ÏòÏòÁ¿±ä³Éµ¥Î»ÏòÁ¿
-        m_ForceTransSpeed = forceTransSpeed;//Ç¿ÖÆÎ»ÒÆµÄËÙ¶È
-        m_ForceTransDirect = uniteVector;//Ç¿ÖÆÎ»ÒÆµÄ·½Ïò
+        controlabel = false;//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½flag
+        uncontrolTime = time;//ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
+        _color = color;//ï¿½ï¿½É«
+        Radiu += 0.5f;//ï¿½ë¾¶ï¿½ï¿½ï¿½ï¿½
+        Vector3 uniteVector = transform.position - effectPoint;//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Äµï¿½ï¿½Ô¼ï¿½ï¿½Ä·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        uniteVector = uniteVector.normalized;//ï¿½Ñ·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Éµï¿½Î»ï¿½ï¿½ï¿½ï¿½
+        m_ForceTransSpeed = forceTransSpeed;//Ç¿ï¿½ï¿½Î»ï¿½Æµï¿½ï¿½Ù¶ï¿½
+        m_ForceTransDirect = uniteVector;//Ç¿ï¿½ï¿½Î»ï¿½ÆµÄ·ï¿½ï¿½ï¿½
         m_Anim.SetTrigger("hit");
-        //»ñµÃ¾àÀë×÷ÓÃÁ¦ÖÐÐÄµÄ¾àÀë
+        //ï¿½ï¿½Ã¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÄµÄ¾ï¿½ï¿½ï¿½
         float distance = Vector3.Distance(effectPoint, transform.position);
-        //Ëã³ö×÷ÓÃÁ¦µÄ±ÈÖØ£¬ÒòÎªÖ»ÓÐdistance < RadiuµÄÊ±ºò²Å»áµ÷ÓÃÕâ¸öº¯Êý£¬ËùÒÔ²»ÅÂ³öÏÖ¸ºÊý
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä±ï¿½ï¿½Ø£ï¿½ï¿½ï¿½ÎªÖ»ï¿½ï¿½distance < Radiuï¿½ï¿½Ê±ï¿½ï¿½Å»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô²ï¿½ï¿½Â³ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½
         float effectWeight = (Radiu - distance) / Radiu;
-        //¼ÆËã×îÖÕ×÷ÓÃÁ¦ÏòÁ¿(Á¦*±ÈÖØ*·½Ïò)
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½*ï¿½ï¿½ï¿½ï¿½*ï¿½ï¿½ï¿½ï¿½)
         Vector3 effectForce = force * effectWeight * uniteVector;
-        //Ê©Á¦
+        //Ê©ï¿½ï¿½
         m_Rigidbody2D.velocity = effectForce;
 
 

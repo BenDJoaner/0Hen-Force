@@ -1,7 +1,6 @@
 using System;
 using UnityEngine;
 using UnityEngine.Networking;
-using UnityStandardAssets.CrossPlatformInput;
 //using UnityStandardAssets.CrossPlatformInput;
 
 
@@ -22,15 +21,15 @@ public class Platformer2DUserControl : NetworkBehaviour
     {
         if (!m_Jump)
         {
-            m_Jump = CrossPlatformInputManager.GetButtonDown("Jump");
+            // m_Jump = CrossPlatformInputManager.GetButtonDown("Jump");
             m_Jump = Input.GetAxis("Jump") >= 0.01;
         }
     }
 
     private void FixedUpdate()
     {
-        float h = CrossPlatformInputManager.GetAxis("Horizontal");
-        m_Character.Move(h, m_Jump);
+        // float h = CrossPlatformInputManager.GetAxis("Horizontal");
+        // m_Character.Move(h, m_Jump);
         m_Jump = false;
     }
 }

@@ -10,25 +10,15 @@ public class CharEditor : Editor
     private SerializedObject data;
     private SerializedProperty id, image, charName, m_charPos, charDesc, skillDesc, supperSkillDesc, airContorl, jumpForce, moveSpeed, weight, preAttackTime, endAttackTime;
     //灵痕模块
-<<<<<<< HEAD
-    private SerializedProperty BuffModule, SpriteModule, ShooterModule, WarriourModule, GhostModule;
-    //守护灵痕
-    private SerializedProperty m_EffectTo, BuffTime, BuffObj, StartBorn, EffectRadius, ActiveTime, EyeObj;
-=======
     private SerializedProperty BuffModule, guardeModule, shooterModule, warriourModule, ghostModule;
     //守护灵痕
     private SerializedProperty m_EffectTo, buffTime, startBorn, effectRadius, activeTime, guardeObj;
->>>>>>> 2733a25c4383e00bf7a2e7e43898f36e4861e985
     //精密灵痕
     private SerializedProperty autoAim, aimContorlable, luanchForce, luanchTime, luanchAngle, attackSpeed, bullet;
     //突围灵痕
     private SerializedProperty hitForce, m_Effect, effectTime, invancible, selfMoveDistend, selfMoveTime, selfMoveAngle;
     //鬼影灵痕
-<<<<<<< HEAD
-    private SerializedProperty SelfMoveDistend, SelfMoveTime, SelfMoveAngle, SelfInvisible, InvisibleTime, IgnorColleder, IgnorGravity, SpeedUp, JumpForceUp, MoveAngleContorlable;
-=======
     private SerializedProperty selfInvisible, invisibleTime, ignorColleder, ignorGravity, speedTimes, massTimes;
->>>>>>> 2733a25c4383e00bf7a2e7e43898f36e4861e985
 
 
     private void OnEnable()
@@ -49,21 +39,6 @@ public class CharEditor : Editor
         endAttackTime = data.FindProperty("endAttackTime");
 
         //====================灵痕模块========================
-<<<<<<< HEAD
-        SpriteModule = data.FindProperty("SpriteModule");
-        ShooterModule = data.FindProperty("ShooterModule");
-        WarriourModule = data.FindProperty("WarriourModule");
-        GhostModule = data.FindProperty("GhostModule");
-
-        //====================守护灵痕========================
-        m_EffectTo = data.FindProperty("m_EffectTo");
-        BuffTime = data.FindProperty("BuffTime");
-        BuffObj = data.FindProperty("BuffObj");
-        StartBorn = data.FindProperty("StartBorn");
-        EffectRadius = data.FindProperty("EffectRadius");
-        ActiveTime = data.FindProperty("ActiveTime");
-        EyeObj = data.FindProperty("EyeObj");
-=======
         guardeModule = data.FindProperty("guardeModule");
         shooterModule = data.FindProperty("shooterModule");
         warriourModule = data.FindProperty("warriourModule");
@@ -76,7 +51,6 @@ public class CharEditor : Editor
         effectRadius = data.FindProperty("effectRadius");
         activeTime = data.FindProperty("activeTime");
         guardeObj = data.FindProperty("guardeObj");
->>>>>>> 2733a25c4383e00bf7a2e7e43898f36e4861e985
 
         //====================精密灵痕========================
         autoAim = data.FindProperty("autoAim");
@@ -97,18 +71,6 @@ public class CharEditor : Editor
         selfMoveAngle = data.FindProperty("selfMoveAngle");
 
         //====================鬼影灵痕========================
-<<<<<<< HEAD
-        SelfMoveDistend = data.FindProperty("SelfMoveDistend");
-        SelfMoveTime = data.FindProperty("SelfMoveTime");
-        MoveAngleContorlable = data.FindProperty("MoveAngleContorlable");
-        SelfMoveAngle = data.FindProperty("SelfMoveAngle");
-        SelfInvisible = data.FindProperty("SelfInvisible");
-        InvisibleTime = data.FindProperty("InvisibleTime");
-        IgnorColleder = data.FindProperty("IgnorColleder");
-        IgnorGravity = data.FindProperty("IgnorGravity");
-        SpeedUp = data.FindProperty("SpeedUp");
-        JumpForceUp = data.FindProperty("JumpForceUp");
-=======
 
         selfInvisible = data.FindProperty("selfInvisible");
         invisibleTime = data.FindProperty("invisibleTime");
@@ -116,7 +78,6 @@ public class CharEditor : Editor
         ignorGravity = data.FindProperty("ignorGravity");
         massTimes = data.FindProperty("massTimes");
         speedTimes = data.FindProperty("speedTimes");
->>>>>>> 2733a25c4383e00bf7a2e7e43898f36e4861e985
     }
 
     public override void OnInspectorGUI()
@@ -142,19 +103,6 @@ public class CharEditor : Editor
         EditorGUILayout.PropertyField(endAttackTime);
 
         //====================守护灵痕========================
-<<<<<<< HEAD
-        EditorGUILayout.PropertyField(SpriteModule);
-        if (SpriteModule.boolValue)
-        {
-            // EditorGUILayout.LabelField("灵痕简介：产生范围作用", EditorStyles.label);
-            EditorGUILayout.PropertyField(m_EffectTo);
-            EditorGUILayout.PropertyField(BuffTime);
-            EditorGUILayout.PropertyField(BuffObj);
-            EditorGUILayout.PropertyField(StartBorn);
-            EditorGUILayout.PropertyField(EffectRadius);
-            EditorGUILayout.PropertyField(ActiveTime);
-            EditorGUILayout.PropertyField(EyeObj);
-=======
         EditorGUILayout.PropertyField(guardeModule);
         if (guardeModule.boolValue)
         {
@@ -169,11 +117,6 @@ public class CharEditor : Editor
         else
         {
             effectRadius.floatValue = 0f;
->>>>>>> 2733a25c4383e00bf7a2e7e43898f36e4861e985
-        }
-        else
-        {
-            EffectRadius.floatValue = 0f;
         }
 
         //====================精密灵痕========================
@@ -181,13 +124,8 @@ public class CharEditor : Editor
         if (shooterModule.boolValue)
         {
             // EditorGUILayout.LabelField("灵痕简介：向外抛射子弹", EditorStyles.label);
-<<<<<<< HEAD
-            EditorGUILayout.PropertyField(AimContorlable);
-            if (!AimContorlable.boolValue)
-=======
             EditorGUILayout.PropertyField(aimContorlable);
             if (!aimContorlable.boolValue)
->>>>>>> 2733a25c4383e00bf7a2e7e43898f36e4861e985
             {
                 EditorGUILayout.PropertyField(autoAim);
                 if (!autoAim.boolValue)
@@ -206,12 +144,6 @@ public class CharEditor : Editor
         if (warriourModule.boolValue)
         {
             // EditorGUILayout.LabelField("灵痕简介：本身就是战斗机器", EditorStyles.label);
-<<<<<<< HEAD
-            EditorGUILayout.PropertyField(HugForce);
-            EditorGUILayout.PropertyField(HugAngle);
-            EditorGUILayout.PropertyField(HitForce);
-=======
->>>>>>> 2733a25c4383e00bf7a2e7e43898f36e4861e985
             EditorGUILayout.PropertyField(m_Effect);
             EditorGUILayout.PropertyField(hitForce);
             EditorGUILayout.PropertyField(effectTime);
@@ -226,16 +158,8 @@ public class CharEditor : Editor
         if (ghostModule.boolValue)
         {
             // EditorGUILayout.LabelField("灵痕简介：拥有神出鬼没的能力", EditorStyles.label);
-<<<<<<< HEAD
-            EditorGUILayout.PropertyField(SelfMoveDistend);
-            EditorGUILayout.PropertyField(SelfMoveTime);
-            EditorGUILayout.PropertyField(MoveAngleContorlable);
-            //
-            if (MoveAngleContorlable.boolValue)
-=======
             EditorGUILayout.PropertyField(selfInvisible);
             if (selfInvisible.boolValue)
->>>>>>> 2733a25c4383e00bf7a2e7e43898f36e4861e985
             {
                 EditorGUILayout.PropertyField(invisibleTime);
             }
@@ -245,14 +169,7 @@ public class CharEditor : Editor
             {
                 EditorGUILayout.PropertyField(massTimes);
             }
-<<<<<<< HEAD
-            EditorGUILayout.PropertyField(IgnorColleder);
-            EditorGUILayout.PropertyField(IgnorGravity);
-            EditorGUILayout.PropertyField(SpeedUp);
-            EditorGUILayout.PropertyField(JumpForceUp);
-=======
             EditorGUILayout.PropertyField(speedTimes);
->>>>>>> 2733a25c4383e00bf7a2e7e43898f36e4861e985
         }
         data.ApplyModifiedProperties();
     }
