@@ -7,7 +7,7 @@ using UnityEngine;
 public class BulletEditor : Editor
 {
     private SerializedObject data;
-    private SerializedProperty m_Effect, LifeTime, IsCarryer, BornBullet, TeamEffect, IgnorGravity, HitForce, AttachTarget, Freeze, FreezeTime, Freezecolor, CrossOver;
+    private SerializedProperty m_Effect, LifeTime, IsCarryer, BornBullet, TeamEffect, IgnorGravity, HitForce, AttachTarget, EffectTime, Effectcolor, CrossOver;
 
     private void OnEnable()
     {
@@ -20,16 +20,14 @@ public class BulletEditor : Editor
         IgnorGravity = data.FindProperty("IgnorGravity");
         HitForce = data.FindProperty("HitForce");
         AttachTarget = data.FindProperty("AttachTarget");
-        Freeze = data.FindProperty("Freeze");
-        FreezeTime = data.FindProperty("FreezeTime");
-        Freezecolor = data.FindProperty("Freezecolor");
+        EffectTime = data.FindProperty("EffectTime");
+        Effectcolor = data.FindProperty("Effectcolor");
         CrossOver = data.FindProperty("CrossOver");
     }
 
     public override void OnInspectorGUI()
     {
         data.Update();
-        EditorGUILayout.PropertyField(m_Effect);
         EditorGUILayout.PropertyField(LifeTime);
         EditorGUILayout.PropertyField(TeamEffect);
         EditorGUILayout.PropertyField(IgnorGravity);
@@ -41,11 +39,11 @@ public class BulletEditor : Editor
         }
         else
         {
+            EditorGUILayout.PropertyField(m_Effect);
             EditorGUILayout.PropertyField(AttachTarget);
             EditorGUILayout.PropertyField(HitForce);
-            EditorGUILayout.PropertyField(Freeze);
-            EditorGUILayout.PropertyField(FreezeTime);
-            EditorGUILayout.PropertyField(Freezecolor);
+            EditorGUILayout.PropertyField(EffectTime);
+            EditorGUILayout.PropertyField(Effectcolor);
         }
         data.ApplyModifiedProperties();
     }

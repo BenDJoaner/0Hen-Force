@@ -27,10 +27,10 @@ public class LHNetworkGameManager : NetworkBehaviour
             StartCoroutine("TriggerSpawnCoroutine");
         }
 
-        // for (int i = 0; i < sPlayer.Count; ++i)
-        // {
-        //    sPlayer[i].Init();
-        // }game
+        for (int i = 0; i < sPlayer.Count; ++i)
+        {
+            // sPlayer[i].Init();
+        }
         ui_select.gameObject.SetActive(true);
 
     }
@@ -39,8 +39,8 @@ public class LHNetworkGameManager : NetworkBehaviour
     void Update()
     {
         if (!hasLocalPlayer) return;
-        //if (!_running || sPlayer.Count == 0)
-        //    return;
+        if (!_running || sPlayer.Count == 0)
+            return;
 
         //返回前厅(站位)
         if (false)

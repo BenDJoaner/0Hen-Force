@@ -22,14 +22,16 @@ public class LHNetworkPlayer : NetworkBehaviour
     float _shootingTimer;
 
     LHNetworkGameManager manager;
-    //很难控制什么时候调用Init（网络令对象产生非确定性的顺序）
-    //所以我们从多个位置调用init（取决于首先创建的宇宙飞船和管理器之间的内容）。
+    PlayerCanvaFollow infoCanva;
+    LHPlayerController controller;
+
     protected bool _wasInit = false;
 
     void Awake()
     {
         //在游戏管理器中注册，这将允许循环。
         LHNetworkGameManager.sPlayer.Add(this);
+        controller = GetComponent<LHPlayerController>();
     }
 
     private void Start()
@@ -37,15 +39,16 @@ public class LHNetworkPlayer : NetworkBehaviour
         manager = LHNetworkGameManager.sInstance;
 
         pCanva = Instantiate(AssetConfig.GetPrefabByName("PlayerCanvas"), transform.position, Quaternion.identity);
-        pCanva.GetComponent<PlayerCanvaFollow>().OnSetTargetTransform(gameObject.transform);
-        pCanva.GetComponent<PlayerCanvaFollow>().OnSetPlayerName(playerName);
+        infoCanva = pCanva.GetComponent<PlayerCanvaFollow>();
+        infoCanva.OnSetTargetTransform(gameObject.transform);
+        infoCanva.OnSetPlayerName(playerName);
         switch (team)
         {
             case 1:
-                pCanva.GetComponent<PlayerCanvaFollow>().OnSetColor(new Color(52.0f / 255.0f, 114.0f / 255.0f, 161.0f / 255.0f, 1.0f));
+                infoCanva.OnSetColor(new Color(52.0f / 255.0f, 114.0f / 255.0f, 161.0f / 255.0f, 1.0f));
                 break;
             default:
-                pCanva.GetComponent<PlayerCanvaFollow>().OnSetColor(new Color(161.0f / 255.0f, 92.0f / 255.0f, 52.0f / 255.0f, 1.0f));
+                infoCanva.OnSetColor(new Color(161.0f / 255.0f, 92.0f / 255.0f, 52.0f / 255.0f, 1.0f));
                 break;
         }
 
@@ -56,21 +59,21 @@ public class LHNetworkPlayer : NetworkBehaviour
             GetComponent<PlatformEffector2D>().enabled = true;
             GameObject.FindGameObjectWithTag("CameraHolder").GetComponent<CameraControl>().Player = gameObject;
         }
+        else
+        {
+            Destroy(GetComponent<PlatformEffector2D>());
+            Destroy(GetComponent<CircleCollider2D>());
+        }
     }
 
     public void Init(CharacterData data)
     {
-        if (_wasInit||data==null)
+        if (_wasInit || data == null)
             return;
-        //设置属性，动画和武=====START==========
+        //生成玩家对象
         Instantiate(data.gameObject, transform.position, Quaternion.identity).transform.SetParent(gameObject.transform, true);       //生成Char
-        GetComponent<PlatformerCharacter2D>().DataInit(
-            data.jumpForce,
-            data.moveSpeed,
-            data.weight,
-            data.airContorl);
-        //设置属性，动画和武=====END==========
-        Instantiate(AssetConfig.GetPrefabByName("KillParticle"), transform.position, Quaternion.identity);
+        //传送数据
+        controller.DataInit(data);
         _wasInit = true;
     }
 
@@ -79,12 +82,6 @@ public class LHNetworkPlayer : NetworkBehaviour
     {
         if (!isLocalPlayer) return;
         if (!_wasInit) return;
-        //if (CrossPlatformInputManager.GetButtonDown("Submit") && _shootingTimer <= 0)
-        //{
-        //    _shootingTimer = data.attackSpeed;
-        //    luachFlag = true;
-        //    preAttackTime = data.preAttackTime;
-        //}
 
         if (_shootingTimer > 0)
             _shootingTimer -= Time.deltaTime;
@@ -98,28 +95,7 @@ public class LHNetworkPlayer : NetworkBehaviour
             {
                 luachFlag = false;
                 preAttackTime = 0;
-                //foreach (Transform trans in GetComponentInChildren<CharacterData>().m_AttackCheck)
-                //{
-                //    CmdFire(trans.position, transform.localEulerAngles, data.luanchForce);
-                //}
             }
         }
-    }
-
-    [Command]
-    public void CmdFire(Vector3 AttackPos, Vector3 Rote, float force)
-    {
-        //Rigidbody2D Bullet = Instantiate(data.bullet, AttackPos, Quaternion.identity) as Rigidbody2D;
-        //Bullet.transform.localEulerAngles = Rote;
-        //Bullet.gameObject.GetComponent<GaneralLuachScript>()._teamFlag = team;
-        //Bullet.velocity = (AttackPos - transform.position) * force;
-        //NetworkServer.Spawn(Bullet.gameObject);
-        //RpcFireAnim();
-    }
-
-    [ClientRpc]
-    public void RpcFireAnim()
-    {
-        GetComponentInChildren<Animator>().SetTrigger("attack");
     }
 }

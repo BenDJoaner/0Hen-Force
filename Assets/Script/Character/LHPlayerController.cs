@@ -19,7 +19,7 @@ public class LHPlayerController : NetworkBehaviour
     private Rigidbody2D m_Rigidbody2D;
 
     //联网同步处理
-    [SyncVar]
+    [SyncVar(hook = "OnMyFacing")]
     private bool m_FacingRight = true;
     [SyncVar(hook = "OnMyColor")]
     public Color _color;
@@ -27,8 +27,10 @@ public class LHPlayerController : NetworkBehaviour
     public Quaternion selfRote;
 
     //特殊情况处理
-    private float uncontrolTime = 0;
-    private bool controlabel = true;
+    [HideInInspector]
+    public float uncontrolTime = 0;
+    [HideInInspector]
+    public bool controlabel = false;
 
     //普通变量
     private bool m_Grounded;
@@ -48,6 +50,25 @@ public class LHPlayerController : NetworkBehaviour
         //TODO：设置名字颜色
     }
 
+    public void OnMyFacing(bool Flag)
+    {
+        if (Flag)
+        {
+            transform.eulerAngles = new Vector3(0, 0, 0);
+            selfRote = transform.rotation;
+        }
+        else
+        {
+            transform.eulerAngles = new Vector3(0, 180, 0);
+            selfRote = transform.rotation;
+        }
+    }
+
+    public void OnMyRote(Quaternion rote)
+    {
+        transform.rotation = rote;
+    }
+
     public void DataInit(CharacterData data)
     {
         if (initDone) return;
@@ -59,17 +80,11 @@ public class LHPlayerController : NetworkBehaviour
         initDone = true;
     }
 
-    public void OnMyRote(Quaternion rote)
-    {
-        transform.rotation = rote;
-    }
-
     void Update()
     {
         if (!m_Jump)
             m_Jump = CnInputManager.GetButtonDown("Jump");
     }
-
 
     void FixedUpdate()
     {
@@ -108,14 +123,11 @@ public class LHPlayerController : NetworkBehaviour
             if (move > 0 && !m_FacingRight)
             {
                 m_FacingRight = !m_FacingRight;
-                transform.eulerAngles = new Vector3(0, 0, 0);
-                selfRote = transform.rotation;
             }
             else if (move < 0 && m_FacingRight)
             {
                 m_FacingRight = !m_FacingRight;
-                transform.eulerAngles = new Vector3(0, 180, 0);
-                selfRote = transform.rotation;
+
             }
         }
         if (m_Grounded && jump)
@@ -153,6 +165,12 @@ public class LHPlayerController : NetworkBehaviour
         RpcNumAnim(str, num);
     }
 
+    [Command]
+    void CmdTriggerAnim(string str)
+    {
+        RpcTriggerAnim(str);
+    }
+
     [ClientRpc]
     void RpcBoolAnim(string str, bool flag)
     {
@@ -165,5 +183,12 @@ public class LHPlayerController : NetworkBehaviour
     {
         if (!m_Anim) return;
         m_Anim.SetFloat(str, num);
+    }
+
+    [ClientRpc]
+    void RpcTriggerAnim(string str)
+    {
+        if (!m_Anim) return;
+        m_Anim.SetTrigger(str);
     }
 }

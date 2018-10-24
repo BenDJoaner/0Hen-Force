@@ -6,15 +6,8 @@ using UnityEngine.Networking;
 [RequireComponent(typeof(Rigidbody2D))]
 public class BulletData : NetworkBehaviour
 {
-    [Tooltip("1,REPEL-击退：对目标产生强位移\n2,CHARM-魅惑：目标向攻击者移动(受损)\n3,FEAR-恐惧：目标远离攻击者移动(受损)\n4,CONFINE-禁锢：目标不能移动\n5,DECELERATE-减速：目标移动速度受损\n6,CONGEAL-凝滞：目标无法操作和选中")]
-    [FieldLabel("攻击效果")]
-    public AttackEffect m_Effect;
-
     [FieldLabel("生命周期")]
     public float LifeTime;
-
-    [FieldLabel("是载体")]
-    public bool IsCarryer;
 
     [FieldLabel("生成物")]
     public BulletData BornBullet;
@@ -25,23 +18,27 @@ public class BulletData : NetworkBehaviour
     [FieldLabel("无视重力")]
     public bool IgnorGravity;
 
+    [FieldLabel("是载体")]
+    public bool IsCarryer;
+
+    [FieldLabel("是否穿透")]
+    public bool CrossOver;
+
+    [Tooltip("1,REPEL-击退：对目标产生强位移\n\n2,CHARM-魅惑：目标向攻击者移动(受损)\n\n3,FEAR-恐惧：目标远离攻击者移动(受损)\n\n4,CONFINE-禁锢：目标不能移动\n\n5,DECELERATE-减速：目标移动速度受损\n\n6,CONGEAL-凝滞：目标无法操作和选中")]
+    [FieldLabel("攻击效果")]
+    public AttackEffect m_Effect;
+
     [FieldLabel("作用力")]
     public float HitForce;
 
     [FieldLabel("附着目标")]
     public bool AttachTarget;
 
-    [FieldLabel("目标硬直")]
-    public bool Freeze;
+    [FieldLabel("作用时间")]
+    public float EffectTime;
 
-    [FieldLabel("硬直时间")]
-    public float FreezeTime;
-
-    [FieldLabel("硬直变色")]
-    public Color Freezecolor;
-
-    [FieldLabel("是否穿透")]
-    public bool CrossOver;
+    [FieldLabel("作用变色")]
+    public Color Effectcolor;
 
     [HideInInspector]
     public LHNetworkPlayer _borner;//发射者
