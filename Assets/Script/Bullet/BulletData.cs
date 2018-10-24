@@ -68,18 +68,10 @@ public class BulletData : NetworkBehaviour
         {
             GameObject bullet = Instantiate(BornBullet.gameObject, transform.position, Quaternion.identity);
             NetworkServer.Spawn(bullet);
-            Destroy(gameObject);
         }
         else
         {
-            PlatformerCharacter2D charecter = other.GetComponent<PlatformerCharacter2D>();
-            if (charecter)
-            {
-                if (other.GetComponent<LHNetworkPlayer>().team == _borner.team && !TeamEffect) return;
-                //传入 作用时间，作用点坐标，作用力，颜色
-                // charecter.PlayerUncontrol(_forceTransSpeed, GetComponent<CircleCollider2D>().radius, _effecTime, transform.position, _force, _color);
-                Destroy(gameObject);
-            }
+            if (other.GetComponent<LHNetworkPlayer>().team == _borner.team && !TeamEffect) return;
         }
     }
 }

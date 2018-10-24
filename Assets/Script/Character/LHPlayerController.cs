@@ -36,8 +36,9 @@ public class LHPlayerController : NetworkBehaviour
     private bool m_Grounded;
     private bool initDone;
     private bool m_Jump;
-    private float x;
-    private float y;
+    [HideInInspector]
+    public Vector2 _joystick;//摇杆输入的量
+
     // Use this for initialization
     void Awake()
     {
@@ -93,12 +94,12 @@ public class LHPlayerController : NetworkBehaviour
 
         m_Grounded = GroundCheck();
 
-        x = CnInputManager.GetAxis("Horizontal");
-        y = CnInputManager.GetAxis("Vertical");
+        _joystick.x = CnInputManager.GetAxis("Horizontal");
+        _joystick.y = CnInputManager.GetAxis("Vertical");
 
         if (initDone && controlabel)
         {
-            Move(x, m_Jump);
+            Move(_joystick.x, m_Jump);
         }
         else
         {

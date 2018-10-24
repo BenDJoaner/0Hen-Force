@@ -43,10 +43,10 @@ public class LHNetworkGameManager : NetworkBehaviour
             return;
 
         //返回前厅(站位)
-        if (false)
-        {
-            StartCoroutine(ReturnToLoby());
-        }
+        // if (false)
+        // {
+        //     StartCoroutine(ReturnToLoby());
+        // }
     }
 
     public void Init(LHNetworkPlayer player)

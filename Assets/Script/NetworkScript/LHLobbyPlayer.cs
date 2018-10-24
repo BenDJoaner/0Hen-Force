@@ -21,7 +21,7 @@ public class LHLobbyPlayer : NetworkLobbyPlayer
     public string playerName = "";
     [SyncVar(hook = "OnMyTeam")]
     public int playerTeam = 0;
-    
+
 
     public override void OnClientEnterLobby()
     {
@@ -91,7 +91,7 @@ public class LHLobbyPlayer : NetworkLobbyPlayer
     {
         if (readyState)
         {
-            Text textComponent = readyButton.transform.GetChild(0).GetComponent<Text>();
+            // Text textComponent = readyButton.transform.GetChild(0).GetComponent<Text>();
             // textComponent.text = "就绪";
             ReadyIcon.color = Color.green;
             readyButton.GetComponent<Image>().color = new Color(108.0f / 255.0f, 217.0f / 255.0f, 136.0f / 255.0f, 0.5f);
@@ -99,7 +99,7 @@ public class LHLobbyPlayer : NetworkLobbyPlayer
         }
         else
         {
-            Text textComponent = readyButton.transform.GetChild(0).GetComponent<Text>();
+            // Text textComponent = readyButton.transform.GetChild(0).GetComponent<Text>();
             // textComponent.text = isLocalPlayer ? "准备" : "等待...";
             ReadyIcon.color = Color.gray;
             readyButton.interactable = isLocalPlayer;
@@ -155,8 +155,9 @@ public class LHLobbyPlayer : NetworkLobbyPlayer
     public void OnTeamClicked()
     {
         if (!isLocalPlayer) return;
-        
-        if(LHLobbyPlayerList._instance.OnGetTeamNumByIndex(playerTeam)>3){
+
+        if (LHLobbyPlayerList._instance.OnGetTeamNumByIndex(playerTeam) > 3)
+        {
             LHLobbyManager.s_Singleton.infoPanel.Display("队伍满人，无法加入", "关闭", null);
             return;
         }
