@@ -16,7 +16,7 @@ public class CharEditor : Editor
     //精密灵痕
     private SerializedProperty autoAim, aimContorlable, luanchForce, luanchTime, luanchAngle, attackSpeed, bullet;
     //突围灵痕
-    private SerializedProperty hitForce, m_Effect, effectTime, invancible, selfMoveDistend, selfMoveTime, selfMoveAngle;
+    private SerializedProperty hitForce, m_Effect, effectTime, invancible, selfMoveDistend, selfMoveTime;
     //鬼影灵痕
     private SerializedProperty selfInvisible, invisibleTime, ignorColleder, ignorGravity, speedTimes, massTimes;
 
@@ -68,7 +68,6 @@ public class CharEditor : Editor
         invancible = data.FindProperty("invancible");
         selfMoveDistend = data.FindProperty("selfMoveDistend");
         selfMoveTime = data.FindProperty("selfMoveTime");
-        selfMoveAngle = data.FindProperty("selfMoveAngle");
 
         //====================鬼影灵痕========================
 
@@ -150,7 +149,6 @@ public class CharEditor : Editor
             EditorGUILayout.PropertyField(invancible);
             EditorGUILayout.PropertyField(selfMoveDistend);
             EditorGUILayout.PropertyField(selfMoveTime);
-            EditorGUILayout.PropertyField(selfMoveAngle);
         }
 
         //====================鬼影灵痕========================

@@ -119,9 +119,6 @@ public class CharacterData : MonoBehaviour
     [FieldLabel("无视强位移")]
     public bool invancible;
 
-    [FieldLabel("位移的角度")]
-    public float selfMoveAngle;
-
     [FieldLabel("位移距离")]
     public float selfMoveDistend;
 

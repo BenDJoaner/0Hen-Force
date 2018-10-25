@@ -30,7 +30,7 @@ public class LHPlayerController : NetworkBehaviour
     [HideInInspector]
     public float uncontrolTime = 0;
     [HideInInspector]
-    public bool controlabel = false;
+    public BeEffect state = BeEffect.NONE;
 
     //普通变量
     private bool m_Grounded;
@@ -38,6 +38,17 @@ public class LHPlayerController : NetworkBehaviour
     private bool m_Jump;
     [HideInInspector]
     public Vector2 _joystick;//摇杆输入的量
+
+    public enum BeEffect
+    {
+        NONE = 0,           //正常
+        REPEL = 1,          //击退
+        CHARM = 2,          //魅惑
+        FEAR = 3,           //恐惧
+        CONFINE = 4,        //禁锢
+        DECELERATE = 5,     //减速
+        CONGEAL = 6,        //凝滞
+    }
 
     // Use this for initialization
     void Awake()
@@ -63,11 +74,13 @@ public class LHPlayerController : NetworkBehaviour
             transform.eulerAngles = new Vector3(0, 180, 0);
             selfRote = transform.rotation;
         }
+        m_FacingRight = Flag;
     }
 
     public void OnMyRote(Quaternion rote)
     {
         transform.rotation = rote;
+        selfRote = rote;
     }
 
     public void DataInit(CharacterData data)
@@ -97,13 +110,25 @@ public class LHPlayerController : NetworkBehaviour
         _joystick.x = CnInputManager.GetAxis("Horizontal");
         _joystick.y = CnInputManager.GetAxis("Vertical");
 
-        if (initDone && controlabel)
-        {
-            Move(_joystick.x, m_Jump);
-        }
-        else
-        {
-            //TODO：失控时候的状态
+        if(initDone){
+            if(state==BeEffect.NONE||state == BeEffect.DECELERATE){
+                Move(_joystick.x, m_Jump);
+            }else if (state == BeEffect.REPEL)
+            {
+                
+            }else if (state == BeEffect.CHARM)
+            {
+
+            }else if (state == BeEffect.FEAR)
+            {
+
+            }else if (state == BeEffect.CONFINE)
+            {
+
+            }else if (state == BeEffect.CONGEAL)
+            {
+
+            }
         }
 
         //动画
@@ -128,7 +153,6 @@ public class LHPlayerController : NetworkBehaviour
             else if (move < 0 && m_FacingRight)
             {
                 m_FacingRight = !m_FacingRight;
-
             }
         }
         if (m_Grounded && jump)
@@ -137,6 +161,30 @@ public class LHPlayerController : NetworkBehaviour
             CmdBoolAnim("Ground", false);
             m_Rigidbody2D.AddForce(new Vector2(0f, m_JumpForce));
         }
+    }
+
+    //被作用不受控制的向某点靠近（远离）
+    public void BeEffect_MoveTo(float effectTime,Transform target,float speed)
+    {
+
+    }
+
+    //被作用受到力的作用
+    public void BeEffect_AddForce(float effectTime,float force){
+        
+    }
+
+    //被作用移动受损
+    public void BeEffect_MoveDamaged(float effectTime,float times,bool congeal){
+
+    }
+
+    void FaceTo(Vector3 pos){
+        float delta = transform.position.x - pos.x;
+        float x = delta > 0 ? 0 : 180;
+
+        transform.eulerAngles = new Vector3(0, x, 0);
+        selfRote = transform.rotation;
     }
 
     //落地检测
