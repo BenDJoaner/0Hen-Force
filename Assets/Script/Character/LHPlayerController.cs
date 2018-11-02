@@ -14,6 +14,7 @@ public class LHPlayerController : NetworkBehaviour
     const float k_GroundedRadius = .2f;
     const float k_CeilingRadius = .01f;
     private Transform m_GroundCheck;
+    [FieldLabel("地面图层")]
     public LayerMask m_WhatIsGround;//地面层级
     private Animator m_Anim;
     private Rigidbody2D m_Rigidbody2D;
@@ -22,9 +23,9 @@ public class LHPlayerController : NetworkBehaviour
     [SyncVar(hook = "OnMyFacing")]
     private bool m_FacingRight = true;
     [SyncVar(hook = "OnMyColor")]
-    public Color _color;
+    private Color _color;
     [SyncVar(hook = "OnMyRote")]
-    public Quaternion selfRote;
+    private Quaternion selfRote;
 
     //特殊情况处理
     [HideInInspector]
@@ -37,7 +38,7 @@ public class LHPlayerController : NetworkBehaviour
     private bool initDone;
     private bool m_Jump;
     [HideInInspector]
-    public Vector2 _joystick;//摇杆输入的量
+    private Vector2 _joystick;//摇杆输入的量
 
     public enum BeEffect
     {
@@ -96,8 +97,10 @@ public class LHPlayerController : NetworkBehaviour
 
     void Update()
     {
+        // print("m_Jump:" + m_Jump + "/CnInputManager" + CnInputManager.GetButtonUp("Jump"));
         if (!m_Jump)
-            m_Jump = CnInputManager.GetButtonDown("Jump");
+            m_Jump = CnInputManager.GetButtonUp("Jump");
+
     }
 
     void FixedUpdate()
@@ -110,22 +113,21 @@ public class LHPlayerController : NetworkBehaviour
         _joystick.x = CnInputManager.GetAxis("Horizontal");
         _joystick.y = CnInputManager.GetAxis("Vertical");
 
-        if(initDone){
-            if(state==BeEffect.NONE||state == BeEffect.DECELERATE){
+        if (initDone)
+        {
+            if (state == BeEffect.NONE || state == BeEffect.DECELERATE)
+            {
                 Move(_joystick.x, m_Jump);
-            }else if (state == BeEffect.REPEL)
-            {
-                
-            }else if (state == BeEffect.CHARM)
+            }
+            else if (state == BeEffect.REPEL)
             {
 
-            }else if (state == BeEffect.FEAR)
+            }
+            else if (state == BeEffect.CHARM || state == BeEffect.FEAR)
             {
 
-            }else if (state == BeEffect.CONFINE)
-            {
-
-            }else if (state == BeEffect.CONGEAL)
+            }
+            else if (state == BeEffect.CONFINE || state == BeEffect.DECELERATE || state == BeEffect.CONGEAL)
             {
 
             }
@@ -160,26 +162,30 @@ public class LHPlayerController : NetworkBehaviour
             m_Grounded = false;
             CmdBoolAnim("Ground", false);
             m_Rigidbody2D.AddForce(new Vector2(0f, m_JumpForce));
+            m_Jump = false;
         }
     }
 
     //被作用不受控制的向某点靠近（远离）
-    public void BeEffect_MoveTo(float effectTime,Transform target,float speed)
+    public void BeEffect_MoveTo(float effectTime, Transform target, float speed)
     {
 
     }
 
     //被作用受到力的作用
-    public void BeEffect_AddForce(float effectTime,float force){
-        
+    public void BeEffect_AddForce(float effectTime, float force)
+    {
+
     }
 
     //被作用移动受损
-    public void BeEffect_MoveDamaged(float effectTime,float times,bool congeal){
+    public void BeEffect_MoveDamaged(float effectTime, float times, bool congeal)
+    {
 
     }
 
-    void FaceTo(Vector3 pos){
+    void FaceTo(Vector3 pos)
+    {
         float delta = transform.position.x - pos.x;
         float x = delta > 0 ? 0 : 180;
 
@@ -193,6 +199,7 @@ public class LHPlayerController : NetworkBehaviour
         Collider2D[] colliders = Physics2D.OverlapCircleAll(m_GroundCheck.position, k_GroundedRadius, m_WhatIsGround);
         for (int i = 0; i < colliders.Length; i++)
         {
+            // print("colliders" + colliders[i]);
             if (colliders[i].gameObject != gameObject)
             {
                 return true;

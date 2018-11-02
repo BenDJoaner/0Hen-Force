@@ -103,7 +103,7 @@ public class UISelectChar : MonoBehaviour
     /// <param name="data"></param>
     void OnSetInfo(CharacterData data)
     {
-        print("根据设置角色相关信息:" + data.charName);
+        // print("根据设置角色相关信息:" + data.charName);
         Name.text = data.charName;
         CharIcon.sprite = data.image;
         Desc.text = data.charDesc;
@@ -117,7 +117,7 @@ public class UISelectChar : MonoBehaviour
     public void SelectCharactorFunc(int id)
     {
         selectedChar = charListObj.GetCharByID(id);
-        print("点击选择角色:" + id);
+        // print("点击选择角色:" + id);
         OnSetInfo(selectedChar);
     }
 

@@ -6,7 +6,9 @@ using UnityEngine.UI;
 //using UnityStandardAssets.CrossPlatformInput;
 
 [RequireComponent(typeof(NetworkTransform))]
-[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(LHPlayerController))]
+[RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(CircleCollider2D))]
 public class LHNetworkPlayer : NetworkBehaviour
 {
     //网络同步
@@ -56,12 +58,12 @@ public class LHNetworkPlayer : NetworkBehaviour
         {
             manager.Init(this);
             GetComponent<CircleCollider2D>().enabled = true;
-            GetComponent<PlatformEffector2D>().enabled = true;
+            // GetComponent<PlatformEffector2D>().enabled = true;
             GameObject.FindGameObjectWithTag("CameraHolder").GetComponent<CameraControl>().Player = gameObject;
         }
         else
         {
-            Destroy(GetComponent<PlatformEffector2D>());
+            // Destroy(GetComponent<PlatformEffector2D>());
             Destroy(GetComponent<CircleCollider2D>());
         }
     }
