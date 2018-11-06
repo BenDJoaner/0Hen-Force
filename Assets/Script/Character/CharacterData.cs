@@ -8,7 +8,7 @@ using UnityEngine.Events;
 [RequireComponent(typeof(NetworkIdentity))]
 [RequireComponent(typeof(NetworkAnimator))]
 [ExecuteInEditMode]
-// [AddComponentMenu("Character/CharacterData")]
+[AddComponentMenu("0HenTool/CharacterData")]
 public class CharacterData : MonoBehaviour
 {
     public int id;

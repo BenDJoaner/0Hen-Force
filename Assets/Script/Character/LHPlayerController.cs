@@ -16,7 +16,7 @@ public class LHPlayerController : NetworkBehaviour
     private Transform m_GroundCheck;
     [FieldLabel("地面图层")]
     public LayerMask m_WhatIsGround;//地面层级
-    private Animator m_Anim;
+    public Animator m_Anim;
     private Rigidbody2D m_Rigidbody2D;
 
     //联网同步处理
@@ -34,11 +34,12 @@ public class LHPlayerController : NetworkBehaviour
     public BeEffect state = BeEffect.NONE;
 
     //普通变量
-    private bool m_Grounded;
+    private bool m_Grounded = true;
     private bool initDone;
     private bool m_Jump;
     [HideInInspector]
     private Vector2 _joystick;//摇杆输入的量
+    private float jump_cold;
 
     public enum BeEffect
     {
@@ -98,9 +99,11 @@ public class LHPlayerController : NetworkBehaviour
     void Update()
     {
         // print("m_Jump:" + m_Jump + "/CnInputManager" + CnInputManager.GetButtonUp("Jump"));
-        if (!m_Jump)
-            m_Jump = CnInputManager.GetButtonUp("Jump");
+        if (!m_Jump && jump_cold <= 0)
+            m_Jump = CnInputManager.GetButtonDown("Jump");
 
+        if (jump_cold > 0)
+            jump_cold -= Time.deltaTime;
     }
 
     void FixedUpdate()
@@ -163,6 +166,7 @@ public class LHPlayerController : NetworkBehaviour
             CmdBoolAnim("Ground", false);
             m_Rigidbody2D.AddForce(new Vector2(0f, m_JumpForce));
             m_Jump = false;
+            jump_cold = 0.4f;
         }
     }
 
@@ -231,20 +235,21 @@ public class LHPlayerController : NetworkBehaviour
     void RpcBoolAnim(string str, bool flag)
     {
         if (!m_Anim) return;
-        m_Anim.SetBool(str, flag);
+        GetComponentInChildren<Animator>().SetBool(str, flag);
     }
 
     [ClientRpc]
     void RpcNumAnim(string str, float num)
     {
         if (!m_Anim) return;
-        m_Anim.SetFloat(str, num);
+        print("flag：" + str + "/" + num);
+        GetComponentInChildren<Animator>().SetFloat(str, num);
     }
 
     [ClientRpc]
     void RpcTriggerAnim(string str)
     {
         if (!m_Anim) return;
-        m_Anim.SetTrigger(str);
+        GetComponentInChildren<Animator>().SetTrigger(str);
     }
 }

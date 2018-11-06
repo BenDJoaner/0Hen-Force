@@ -9,6 +9,7 @@ using UnityEngine.UI;
 [RequireComponent(typeof(LHPlayerController))]
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(CircleCollider2D))]
+[AddComponentMenu("0HenTool/LHNetworkPlayer")]
 public class LHNetworkPlayer : NetworkBehaviour
 {
     //网络同步
@@ -76,6 +77,7 @@ public class LHNetworkPlayer : NetworkBehaviour
         Instantiate(data.gameObject, transform.position, Quaternion.identity).transform.SetParent(gameObject.transform, true);       //生成Char
         //传送数据
         controller.DataInit(data);
+        this.data = data;
         _wasInit = true;
     }
 
