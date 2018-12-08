@@ -6,7 +6,6 @@ using UnityEngine.UI;
 //using UnityStandardAssets.CrossPlatformInput;
 
 [RequireComponent(typeof(NetworkTransform))]
-[RequireComponent(typeof(LHPlayerController))]
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(CircleCollider2D))]
 [AddComponentMenu("0HenTool/LHNetworkPlayer")]
@@ -20,13 +19,14 @@ public class LHNetworkPlayer : NetworkBehaviour
 
     private bool luachFlag;
     private float preAttackTime;
-    public CharacterData data;
+    public CharacterData _data;
     public GameObject pCanva;//画布控制脚本
     float _shootingTimer;
+    public bool controlable;
+    private GameObject m_PointerCheck;
 
     LHNetworkGameManager manager;
     PlayerCanvaFollow infoCanva;
-    LHPlayerController controller;
 
     protected bool _wasInit = false;
 
@@ -34,7 +34,7 @@ public class LHNetworkPlayer : NetworkBehaviour
     {
         //在游戏管理器中注册，这将允许循环。
         LHNetworkGameManager.sPlayer.Add(this);
-        controller = GetComponent<LHPlayerController>();
+        m_PointerCheck = transform.Find("PointerCheck").gameObject;
     }
 
     private void Start()
@@ -76,8 +76,7 @@ public class LHNetworkPlayer : NetworkBehaviour
         //生成玩家对象
         Instantiate(data.gameObject, transform.position, Quaternion.identity).transform.SetParent(gameObject.transform, true);       //生成Char
         //传送数据
-        controller.DataInit(data);
-        this.data = data;
+        this._data = data;
         _wasInit = true;
     }
 

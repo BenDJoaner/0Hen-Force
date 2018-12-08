@@ -203,15 +203,23 @@ public class CharacterData : MonoBehaviour
         Destroy(gameObject);
     }
 
-    public List<Parabola> GetBornPosList()
+    // public List<Transform> GetBornPosList()
+    // {
+    //     List<Transform> posList = new List<Transform> { };
+    //     foreach (Transform trans in gameObject.transform)
+    //     {
+    //         if (trans.gameObject.tag == "bornPos")
+    //             posList.Add(trans);
+    //     }
+    //     return posList;
+    // }
+
+    public void SetAimAngle(float angle)
     {
-        List<Parabola> posList = new List<Parabola> { };
-        foreach (Parabola pos in gameObject.transform)
-        {
-            if (pos.tag == "bornPos")
-                posList.Add(pos);
-        }
-        return posList;
+        // foreach (Transform trans in gameObject.transform)
+        // {
+        //     trans.localEulerAngles = new Vector3(0, 0, angle);
+        // }
     }
 
     public void OnRenderObject()

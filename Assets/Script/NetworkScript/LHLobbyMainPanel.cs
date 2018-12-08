@@ -14,7 +14,7 @@ public class LHLobbyMainPanel : MonoBehaviour
     public void OnEnable()
     {
         lobbyManager.topPanel.ToggleVisibility(true);
-        playerName.text = "本机玩家名：" + PlayerPrefs.GetString("PlayerName");
+        playerName.text = PlayerPrefs.GetString("PlayerName");
     }
 
     /// <summary>

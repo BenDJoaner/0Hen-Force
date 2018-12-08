@@ -41,6 +41,8 @@ public class LHPlayerController : NetworkBehaviour
     private Vector2 _joystick;//摇杆输入的量
     private float jump_cold;
 
+    LHNetworkPlayer _player;
+
     public enum BeEffect
     {
         NONE = 0,           //正常
@@ -57,7 +59,9 @@ public class LHPlayerController : NetworkBehaviour
     {
         m_GroundCheck = transform.Find("GroundCheck");
         m_Rigidbody2D = GetComponent<Rigidbody2D>();
+        _player = GetComponent<LHNetworkPlayer>();
     }
+
 
     public void OnMyColor(Color color)
     {
@@ -87,7 +91,7 @@ public class LHPlayerController : NetworkBehaviour
 
     public void DataInit(CharacterData data)
     {
-        if (initDone) return;
+        if (initDone || data == null) return;
         m_JumpForce = data.jumpForce;
         m_MaxSpeed = data.moveSpeed;
         m_AirControl = data.airContorl;
@@ -98,7 +102,10 @@ public class LHPlayerController : NetworkBehaviour
 
     void Update()
     {
-        // print("m_Jump:" + m_Jump + "/CnInputManager" + CnInputManager.GetButtonUp("Jump"));
+        if (!initDone)
+        {
+            DataInit(_player._data);
+        }
         if (!m_Jump && jump_cold <= 0)
             m_Jump = CnInputManager.GetButtonDown("Jump");
 
@@ -242,7 +249,6 @@ public class LHPlayerController : NetworkBehaviour
     void RpcNumAnim(string str, float num)
     {
         if (!m_Anim) return;
-        print("flag：" + str + "/" + num);
         GetComponentInChildren<Animator>().SetFloat(str, num);
     }
 

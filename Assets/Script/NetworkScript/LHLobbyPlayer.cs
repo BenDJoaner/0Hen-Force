@@ -64,9 +64,14 @@ public class LHLobbyPlayer : NetworkLobbyPlayer
     public void OnMyTeam(int other)
     {
         playerTeam = other;
-        myNameText.color = other == 1 ?
-            new Color(52.0f / 255.0f, 114.0f / 255.0f, 161.0f / 255.0f, 1.0f)
-            : new Color(161.0f / 255.0f, 92.0f / 255.0f, 52.0f / 255.0f, 1.0f);
+        // myNameText.color = other == 1 ?
+        //     new Color(52.0f / 255.0f, 114.0f / 255.0f, 161.0f / 255.0f, 1.0f)
+        //     : new Color(161.0f / 255.0f, 92.0f / 255.0f, 52.0f / 255.0f, 1.0f);
+        print(other);
+        CharIcon.sprite = AssetConfig.GetUIByName("team_" + other);
+        CharIcon.gameObject.SetActive(false);
+        CharIcon.gameObject.SetActive(true);
+
     }
 
     public void ToggleJoinButton(bool enabled)
@@ -93,15 +98,17 @@ public class LHLobbyPlayer : NetworkLobbyPlayer
         {
             // Text textComponent = readyButton.transform.GetChild(0).GetComponent<Text>();
             // textComponent.text = "就绪";
-            ReadyIcon.color = Color.green;
-            readyButton.GetComponent<Image>().color = new Color(108.0f / 255.0f, 217.0f / 255.0f, 136.0f / 255.0f, 0.5f);
+            // ReadyIcon.color = Color.green;
+            ReadyIcon.gameObject.SetActive(true);
+            // readyButton.GetComponent<Image>().color = new Color(108.0f / 255.0f, 217.0f / 255.0f, 136.0f / 255.0f, 0.5f);
             readyButton.interactable = false;
         }
         else
         {
             // Text textComponent = readyButton.transform.GetChild(0).GetComponent<Text>();
             // textComponent.text = isLocalPlayer ? "准备" : "等待...";
-            ReadyIcon.color = Color.gray;
+            ReadyIcon.gameObject.SetActive(false);
+            // ReadyIcon.color = Color.gray;
             readyButton.interactable = isLocalPlayer;
         }
     }

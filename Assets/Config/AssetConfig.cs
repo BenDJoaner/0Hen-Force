@@ -20,6 +20,11 @@ public static class AssetConfig
         return Resources.LoadAll<Sprite>("Image/Charector/" + Way + "/stand")[0];
     }
 
+    public static Sprite GetUIByName(string name)
+    {
+        return Resources.LoadAll<Sprite>("Image/ui/" + name)[0];
+    }
+
     public static RuntimeAnimatorController GetCharConrollerByIndex(int index)
     {
         return Resources.Load<RuntimeAnimatorController>("Animator/CharAnim" + index);
