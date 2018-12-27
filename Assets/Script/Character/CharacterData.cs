@@ -5,8 +5,7 @@ using UnityEngine.Networking;
 using UnityEngine.Events;
 
 [RequireComponent(typeof(SpriteRenderer))]
-[RequireComponent(typeof(NetworkIdentity))]
-[RequireComponent(typeof(NetworkAnimator))]
+// [RequireComponent(typeof(NetworkIdentity))]
 [ExecuteInEditMode]
 [AddComponentMenu("0HenTool/CharacterData")]
 public class CharacterData : MonoBehaviour
@@ -214,43 +213,35 @@ public class CharacterData : MonoBehaviour
     //     return posList;
     // }
 
-    public void SetAimAngle(float angle)
-    {
-        // foreach (Transform trans in gameObject.transform)
-        // {
-        //     trans.localEulerAngles = new Vector3(0, 0, angle);
-        // }
-    }
+    //public void OnRenderObject()
+    //{
+    //    DrawCircle(transform, transform.position, effectRadius);
+    //}
 
-    public void OnRenderObject()
-    {
-        DrawCircle(transform, transform.position, effectRadius);
-    }
+    //public static void DrawCircle(Transform t, Vector3 center, float radius)
+    //{
+    //    LineRenderer lr = GetLineRenderer(t);
+    //    int pointAmount = 100;//点的数目，值越大曲线越平滑  
+    //    float eachAngle = 360f / pointAmount;
+    //    Vector3 right = t.right;
+    //    // lr.SetVertexCount(pointAmount + 1);
+    //    lr.positionCount = pointAmount + 1;
+    //    for (int i = 0; i <= pointAmount; i++)
+    //    {
+    //        Vector3 pos = Quaternion.Euler(0f, 0f, eachAngle * i) * right * radius + center;
+    //        lr.SetPosition(i, pos);
+    //    }
+    //}
 
-    public static void DrawCircle(Transform t, Vector3 center, float radius)
-    {
-        LineRenderer lr = GetLineRenderer(t);
-        int pointAmount = 100;//点的数目，值越大曲线越平滑  
-        float eachAngle = 360f / pointAmount;
-        Vector3 right = t.right;
-        // lr.SetVertexCount(pointAmount + 1);
-        lr.positionCount = pointAmount + 1;
-        for (int i = 0; i <= pointAmount; i++)
-        {
-            Vector3 pos = Quaternion.Euler(0f, 0f, eachAngle * i) * right * radius + center;
-            lr.SetPosition(i, pos);
-        }
-    }
-
-    private static LineRenderer GetLineRenderer(Transform t)
-    {
-        LineRenderer lr = t.GetComponent<LineRenderer>();
-        if (lr == null)
-        {
-            lr = t.gameObject.AddComponent<LineRenderer>();
-        }
-        lr.startWidth = 0.03f;
-        lr.endWidth = 0.03f;
-        return lr;
-    }
+    //private static LineRenderer GetLineRenderer(Transform t)
+    //{
+    //    LineRenderer lr = t.GetComponent<LineRenderer>();
+    //    if (lr == null)
+    //    {
+    //        lr = t.gameObject.AddComponent<LineRenderer>();
+    //    }
+    //    lr.startWidth = 0.03f;
+    //    lr.endWidth = 0.03f;
+    //    return lr;
+    //}
 }

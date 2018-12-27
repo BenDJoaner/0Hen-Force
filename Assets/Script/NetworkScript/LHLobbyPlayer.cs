@@ -67,7 +67,7 @@ public class LHLobbyPlayer : NetworkLobbyPlayer
         // myNameText.color = other == 1 ?
         //     new Color(52.0f / 255.0f, 114.0f / 255.0f, 161.0f / 255.0f, 1.0f)
         //     : new Color(161.0f / 255.0f, 92.0f / 255.0f, 52.0f / 255.0f, 1.0f);
-        print(other);
+        // print(other);
         CharIcon.sprite = AssetConfig.GetUIByName("team_" + other);
         CharIcon.gameObject.SetActive(false);
         CharIcon.gameObject.SetActive(true);

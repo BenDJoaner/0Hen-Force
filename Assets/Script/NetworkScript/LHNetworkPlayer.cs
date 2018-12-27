@@ -8,6 +8,7 @@ using UnityEngine.UI;
 [RequireComponent(typeof(NetworkTransform))]
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(CircleCollider2D))]
+[RequireComponent(typeof(LHPlayerController))]
 [AddComponentMenu("0HenTool/LHNetworkPlayer")]
 public class LHNetworkPlayer : NetworkBehaviour
 {
@@ -24,6 +25,7 @@ public class LHNetworkPlayer : NetworkBehaviour
     float _shootingTimer;
     public bool controlable;
     private GameObject m_PointerCheck;
+    private GameObject hero;
 
     LHNetworkGameManager manager;
     PlayerCanvaFollow infoCanva;
@@ -74,10 +76,13 @@ public class LHNetworkPlayer : NetworkBehaviour
         if (_wasInit || data == null)
             return;
         //生成玩家对象
-        Instantiate(data.gameObject, transform.position, Quaternion.identity).transform.SetParent(gameObject.transform, true);       //生成Char
+        hero = Instantiate(data.gameObject, transform.position, Quaternion.identity);       //生成Char
+        hero.transform.SetParent(gameObject.transform, true);
         //传送数据
         this._data = data;
         _wasInit = true;
+        GetComponent<LHPlayerController>().enabled = true;
+        GetComponent<Rigidbody2D>().WakeUp();
     }
 
     [ClientCallback]
@@ -89,7 +94,7 @@ public class LHNetworkPlayer : NetworkBehaviour
         if (_shootingTimer > 0)
             _shootingTimer -= Time.deltaTime;
 
-        if (transform.position.y < -20 || transform.position.x < -30 || transform.position.x > 30) transform.position = new Vector3(0, 0, 0);
+        if (transform.position.y < -20 || transform.position.x < -30 || transform.position.x > 30) ResetPlayer();
 
         if (luachFlag)
         {
@@ -100,5 +105,24 @@ public class LHNetworkPlayer : NetworkBehaviour
                 preAttackTime = 0;
             }
         }
+
+        //临时
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            ResetPlayer();
+        }
+    }
+
+    public void ResetPlayer()
+    {
+        manager.ui_select.gameObject.SetActive(true);
+        _wasInit = false;
+        _data = null;
+        transform.position = new Vector3(0, 0, 0);
+        GameObject.Destroy(hero);
+        transform.eulerAngles = new Vector3(0, 0, 0);
+        GetComponent<LHPlayerController>().enabled = false;
+        GetComponent<LHAttackController>().InitDone = false;
+        GetComponent<Rigidbody2D>().Sleep();
     }
 }

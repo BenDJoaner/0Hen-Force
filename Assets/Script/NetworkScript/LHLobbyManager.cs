@@ -417,7 +417,7 @@ public class LHLobbyManager : NetworkLobbyManager
     public void DisplayIsConnecting()
     {
         var _this = this;
-        infoPanel.Display("正在连接房间...", "取消", () => { _this.backDelegate(); });
+        infoPanel.Display("等待房间响应...", "取消", () => { _this.backDelegate(); });
     }
 
     //===============返回按钮==================

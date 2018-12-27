@@ -87,7 +87,7 @@ public class UISelectChar : MonoBehaviour
             //print(data.charID);
             Button CharBtn = Instantiate(iteam);
             CharBtn.transform.SetParent(CharTable, true);
-            CharBtn.image.sprite = data.image;
+            CharBtn.transform.Find("Image").GetComponent<Image>().sprite = data.image;
             CharBtn.onClick.AddListener(delegate ()
             {
                 SelectCharactorFunc(data.id);
@@ -107,7 +107,8 @@ public class UISelectChar : MonoBehaviour
         Name.text = data.charName;
         CharIcon.sprite = data.image;
         Desc.text = data.charDesc;
-        Skill.text = data.skillDesc + "\n" + data.supperSkillDesc;
+        // string desc = data.skillDesc.Split('#')[0] + "\n" + data.skillDesc.Split('#')[1];
+        Skill.text = data.skillDesc + "\n\n" + data.supperSkillDesc;
     }
 
     /// <summary>

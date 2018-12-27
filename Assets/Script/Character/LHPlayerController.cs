@@ -195,14 +195,14 @@ public class LHPlayerController : NetworkBehaviour
 
     }
 
-    void FaceTo(Vector3 pos)
-    {
-        float delta = transform.position.x - pos.x;
-        float x = delta > 0 ? 0 : 180;
+    // void FaceTo(Vector3 pos)
+    // {
+    //     float delta = transform.position.x - pos.x;
+    //     float x = delta > 0 ? 0 : 180;
 
-        transform.eulerAngles = new Vector3(0, x, 0);
-        selfRote = transform.rotation;
-    }
+    //     transform.eulerAngles = new Vector3(0, x, 0);
+    //     selfRote = transform.rotation;
+    // }
 
     //落地检测
     bool GroundCheck()

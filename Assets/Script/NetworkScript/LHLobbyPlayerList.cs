@@ -10,6 +10,8 @@ public class LHLobbyPlayerList : MonoBehaviour
     public Text networkAddress;
     public RectTransform Team_1_playerListContentTransform;
     public RectTransform Team_2_playerListContentTransform;
+    public Image team_1_Highlight;
+    public Image team_2_Highlight;
     public Button teamChange_1;
     public Button teamChange_2;
 
@@ -60,11 +62,15 @@ public class LHLobbyPlayerList : MonoBehaviour
         foreach (LHLobbyPlayer p in team_1)
         {
             p.OnPlayerListChanged(team_1.IndexOf(p));
+            team_1_Highlight.gameObject.SetActive(true);
+            team_2_Highlight.gameObject.SetActive(false);
         }
 
         foreach (LHLobbyPlayer p in team_2)
         {
             p.OnPlayerListChanged(team_2.IndexOf(p));
+            team_1_Highlight.gameObject.SetActive(false);
+            team_2_Highlight.gameObject.SetActive(true);
         }
     }
 
@@ -82,8 +88,10 @@ public class LHLobbyPlayerList : MonoBehaviour
         PlayerListModified();
     }
 
-    public int OnGetTeamNumByIndex(int index){
-        switch(index){
+    public int OnGetTeamNumByIndex(int index)
+    {
+        switch (index)
+        {
             case 2:
                 return team_2.Count;
             default:

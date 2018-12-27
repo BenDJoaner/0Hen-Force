@@ -11,7 +11,6 @@ public class Parabola : MonoBehaviour
     [Range(0, 100)]
     public float shootForce = 1;
     //最大长度
-
     public float maxLength = 30;
     //两点之间的距离
     const float length = 0.01f;

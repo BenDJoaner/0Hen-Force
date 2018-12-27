@@ -13,19 +13,22 @@ public class LHAttackController : MonoBehaviour
     CharacterData _data;
     bool m_attack;
     private GameObject m_PointerCheck;
+    Parabola parabola;
 
+    public bool InitDone { get => initDone; set => initDone = value; }
 
     // Use this for initialization
     void Start()
     {
         _player = GetComponent<LHNetworkPlayer>();
         m_PointerCheck = transform.Find("PointerCheck").gameObject;
+        parabola = m_PointerCheck.GetComponent<Parabola>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (!initDone)
+        if (!InitDone)
         {
             DataInit(_player._data);
         }
@@ -33,25 +36,35 @@ public class LHAttackController : MonoBehaviour
 
     public void DataInit(CharacterData data)
     {
-        if (initDone || data == null) return;
+        if (InitDone || data == null) return;
         _data = data;
-        initDone = true;
+        if(data.shooterModule && !data.autoAim)
+        {
+            m_PointerCheck.SetActive(true);
+            parabola.shootForce = data.luanchForce;
+            if(!data.aimContorlable){
+                m_PointerCheck.transform.eulerAngles = new Vector3(0, 0, data.luanchAngle);
+            }
+        }else{
+            m_PointerCheck.SetActive(false);
+        }
+        InitDone = true;
     }
 
     void FixedUpdate()
     {
 
-        if (initDone)
+        if (InitDone)
         {
             _joystick.x = CnInputManager.GetAxis("Horizontal");
             _joystick.y = CnInputManager.GetAxis("Vertical");
-            m_attack = CnInputManager.GetButton("Fire1");
+            m_attack = CnInputManager.GetButtonDown("Fire1");
 
             AimFunc();
-
+            
             if (m_attack)
             {
-
+                GetComponentInChildren<Animator>().SetTrigger("attack");
             }
             else
             {
@@ -62,9 +75,9 @@ public class LHAttackController : MonoBehaviour
 
     void AimFunc()
     {
+        if (!_data.aimContorlable) return;
         if (_joystick == new Vector2(0, 0)) return;
         float angle = Mathf.Atan2(_joystick.y, _joystick.x) * 180f / Mathf.PI;
-        _data.SetAimAngle(angle);
         m_PointerCheck.transform.eulerAngles = new Vector3(0, 0, angle);
     }
 }
