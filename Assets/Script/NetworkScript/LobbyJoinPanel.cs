@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class LobbyJoinPanel : MonoBehaviour {
+public class LobbyJoinPanel : MonoBehaviour
+{
 
     public LHLobbyManager lobbyManager;
     public RectTransform lobbyPanel;
@@ -18,26 +19,28 @@ public class LobbyJoinPanel : MonoBehaviour {
     public void OnClickJoin()
     {
         OnJoinHostServer(IpInput.text);
-
     }
 
     // Use this for initialization
-    void Start () {
-		
-	}
+    void Start()
+    {
+    }
 
     // Update is called once per frame
-    void Update () {
-		
-	}
+    void Update()
+    {
 
-    public void ClearBtnList(){
-        foreach(RectTransform chiled in HostTable){
+    }
+
+    public void ClearBtnList()
+    {
+        foreach (RectTransform chiled in HostTable)
+        {
             Destroy(chiled.gameObject);
         }
     }
 
-    public void OnLoadHostList(string name,string ip)
+    public void OnLoadHostList(string name, string ip)
     {
         foreach (RectTransform chiled in HostTable)
         {
@@ -47,7 +50,7 @@ public class LobbyJoinPanel : MonoBehaviour {
         GameObject iteam = AssetConfig.GetPrefabByName("HostBtnIteam");
         GameObject HostBtn = Instantiate(iteam);
         HostBtn.transform.SetParent(HostTable, true);
-        HostBtn.GetComponent<UIHostItem>().Init(name,ip,this);
+        HostBtn.GetComponent<UIHostItem>().Init(name, ip, this);
     }
 
     public void OnJoinHostServer(string ip)
@@ -59,7 +62,6 @@ public class LobbyJoinPanel : MonoBehaviour {
 
         lobbyManager.backDelegate = lobbyManager.StopClientClbk;
         lobbyManager.DisplayIsConnecting();
-
-        lobbyManager.SetServerInfo("进入房间...", "房间 IP 地址："+lobbyManager.networkAddress);
+        lobbyManager.SetServerInfo("进入房间...", "房间 IP 地址：" + lobbyManager.networkAddress);
     }
 }

@@ -31,17 +31,18 @@ public class LHNetworkPlayer : NetworkBehaviour
     PlayerCanvaFollow infoCanva;
 
     protected bool _wasInit = false;
+    EnegySprite _carrySprite;
 
     void Awake()
     {
         //在游戏管理器中注册，这将允许循环。
-        LHNetworkGameManager.sPlayer.Add(this);
+        // LHNetworkGameManager.sPlayer.Add(this);
         m_PointerCheck = transform.Find("PointerCheck").gameObject;
     }
 
     private void Start()
     {
-        manager = LHNetworkGameManager.sInstance;
+        // manager = LHNetworkGameManager.sInstance;
 
         pCanva = Instantiate(AssetConfig.GetPrefabByName("PlayerCanvas"), transform.position, Quaternion.identity);
         infoCanva = pCanva.GetComponent<PlayerCanvaFollow>();
@@ -55,19 +56,6 @@ public class LHNetworkPlayer : NetworkBehaviour
             default:
                 infoCanva.OnSetColor(new Color(161.0f / 255.0f, 92.0f / 255.0f, 52.0f / 255.0f, 1.0f));
                 break;
-        }
-
-        if (isLocalPlayer)
-        {
-            manager.Init(this);
-            GetComponent<CircleCollider2D>().enabled = true;
-            // GetComponent<PlatformEffector2D>().enabled = true;
-            GameObject.FindGameObjectWithTag("CameraHolder").GetComponent<CameraControl>().Player = gameObject;
-        }
-        else
-        {
-            // Destroy(GetComponent<PlatformEffector2D>());
-            Destroy(GetComponent<CircleCollider2D>());
         }
     }
 
@@ -88,6 +76,22 @@ public class LHNetworkPlayer : NetworkBehaviour
     [ClientCallback]
     private void Update()
     {
+        if (!manager && GameObject.FindGameObjectWithTag("GameManager"))
+        {
+            manager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<LHNetworkGameManager>();
+            if (isLocalPlayer)
+            {
+                manager.Init(this);
+                GetComponent<CircleCollider2D>().enabled = true;
+                // GetComponent<PlatformEffector2D>().enabled = true;
+                GameObject.FindGameObjectWithTag("CameraHolder").GetComponent<CameraControl>().Player = gameObject;
+            }
+            else
+            {
+                // Destroy(GetComponent<PlatformEffector2D>());
+                GetComponent<CircleCollider2D>().enabled = false;
+            }
+        }
         if (!isLocalPlayer) return;
         if (!_wasInit) return;
 
@@ -125,4 +129,23 @@ public class LHNetworkPlayer : NetworkBehaviour
         GetComponent<LHAttackController>().InitDone = false;
         GetComponent<Rigidbody2D>().Sleep();
     }
+
+    public bool CarrySprite(EnegySprite obj)
+    {
+        if (_carrySprite)
+        {
+            return true;
+        }
+        else
+        {
+            if (obj) _carrySprite = obj;
+            return false;
+        }
+    }
+
+    public EnegySprite GetEnegySprite()
+    {
+        return _carrySprite;
+    }
+
 }

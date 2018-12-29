@@ -14,7 +14,7 @@ public class LHPlayerController : NetworkBehaviour
     const float k_GroundedRadius = .2f;
     const float k_CeilingRadius = .01f;
     private Transform m_GroundCheck;
-    [FieldLabel("地面图层")]
+    //[FieldLabel("地面图层")]
     public LayerMask m_WhatIsGround;//地面层级
     public Animator m_Anim;
     private Rigidbody2D m_Rigidbody2D;
@@ -107,7 +107,9 @@ public class LHPlayerController : NetworkBehaviour
             DataInit(_player._data);
         }
         if (!m_Jump && jump_cold <= 0)
+        {
             m_Jump = CnInputManager.GetButtonDown("Jump");
+        }
 
         if (jump_cold > 0)
             jump_cold -= Time.deltaTime;
@@ -144,8 +146,12 @@ public class LHPlayerController : NetworkBehaviour
         }
 
         //动画
-        CmdBoolAnim("Ground", m_Grounded);
-        CmdNumAnim("vSpeed", m_Rigidbody2D.velocity.y);
+        if (m_Grounded)
+        {
+            CmdBoolAnim("Ground", m_Grounded);
+            CmdNumAnim("vSpeed", m_Rigidbody2D.velocity.y);
+        }
+
     }
 
     void Move(float move, bool jump)
@@ -241,21 +247,21 @@ public class LHPlayerController : NetworkBehaviour
     [ClientRpc]
     void RpcBoolAnim(string str, bool flag)
     {
-        if (!m_Anim) return;
+        if (!GetComponentInChildren<Animator>()) return;
         GetComponentInChildren<Animator>().SetBool(str, flag);
     }
 
     [ClientRpc]
     void RpcNumAnim(string str, float num)
     {
-        if (!m_Anim) return;
+        if (!GetComponentInChildren<Animator>()) return;
         GetComponentInChildren<Animator>().SetFloat(str, num);
     }
 
     [ClientRpc]
     void RpcTriggerAnim(string str)
     {
-        if (!m_Anim) return;
+        if (!GetComponentInChildren<Animator>()) return;
         GetComponentInChildren<Animator>().SetTrigger(str);
     }
 }

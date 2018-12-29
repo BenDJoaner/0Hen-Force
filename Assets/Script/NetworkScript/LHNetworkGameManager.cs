@@ -7,32 +7,25 @@ using UnityEngine.UI;
 public class LHNetworkGameManager : NetworkBehaviour
 {
     static public List<LHNetworkPlayer> sPlayer = new List<LHNetworkPlayer>();
-    static public LHNetworkGameManager sInstance = null;
+    // static public LHNetworkGameManager sInstance = null;
     public LHNetworkPlayer localPlayer;
-
-    protected bool _running = true;
-    CharacterConfig charListObj;
     public UISelectChar ui_select;
-    public Slider team_1_Slider;
-    public Slider team_2_Slider;
-    public Text countDownText;
-    public Transform Team_1_Pice;
-    public Transform Team_2_Pice;
-    GameObject[] pice_1_Arr;
-    GameObject[] pice_2_Arr;
+    public UIOnlineMain ui_main;
+    public BronTransConfig bronPoint;
+    Common.GameMode currentStep = (Common.GameMode)1;
+
+    List<EnegySprite> SpritArr = new List<EnegySprite>();
+    bool _running = true;
     bool hasLocalPlayer = false;
-    public GameMode currentStep = (GameMode)1;
 
-    public enum GameMode
-    {
-        step_1 = 1,
-        step_2 = 2,
-    }
+    CharacterConfig charListObj;
 
-    float countDown = 1;
+    public float team_1_Num;
+    public float team_2_Num;
+
     void Awake()
     {
-        sInstance = this;
+        // sInstance = this;
         charListObj = GetComponent<CharacterConfig>();
     }
 
@@ -43,11 +36,12 @@ public class LHNetworkGameManager : NetworkBehaviour
             StartCoroutine("TriggerSpawnCoroutine");
         }
 
-        for (int i = 0; i < sPlayer.Count; ++i)
-        {
-            // sPlayer[i].Init();
-        }
+        // for (int i = 0; i < sPlayer.Count; ++i)
+        // {
+        //     // sPlayer[i].Init();
+        // }
         ui_select.gameObject.SetActive(true);
+        ui_main.OnModeChange(0);
     }
 
     [ServerCallback]
@@ -55,12 +49,17 @@ public class LHNetworkGameManager : NetworkBehaviour
     {
         if (!hasLocalPlayer) return;
         //返回前厅
-        if (!_running || sPlayer.Count == 0)
+        if (!_running)
         {
             StartCoroutine(ReturnToLoby());
         }
-
-        if (currentStep == (GameMode)2)
+        if ((team_2_Num >= 6 || team_1_Num >= 6) && currentStep == (Common.GameMode)1)
+        {
+            currentStep = (Common.GameMode)2;
+            DestroyAllSprite();
+            ui_main.OnModeChange(1);
+        }
+        if (currentStep == (Common.GameMode)2)
         {
 
         }
@@ -76,7 +75,31 @@ public class LHNetworkGameManager : NetworkBehaviour
     public override void OnStartClient()
     {
         base.OnStartClient();
+    }
 
+    void DestroyAllSprite()
+    {
+        foreach (EnegySprite _sprite in SpritArr)
+        {
+            GameObject.Destroy(_sprite.gameObject);
+        }
+    }
+
+    public void OnUseEnegy(LHNetworkPlayer player)
+    {
+        int teamIndex = player.team;
+        switch (teamIndex)
+        {
+            case 1:
+                team_1_Num += player.GetEnegySprite().EnenyNum;
+                ui_main.OnAddEnegy(teamIndex, team_1_Num);
+                break;
+            case 2:
+                team_2_Num += player.GetEnegySprite().EnenyNum;
+                ui_main.OnAddEnegy(teamIndex, team_2_Num);
+                break;
+        }
+        SpritArr.Remove(player.GetEnegySprite());
     }
 
     IEnumerator ReturnToLoby()
@@ -90,10 +113,16 @@ public class LHNetworkGameManager : NetworkBehaviour
     //协同随机生成机关
     IEnumerator TriggerSpawnCoroutine()
     {
-        while (_running && currentStep == (GameMode)1)
+        while (_running && currentStep == (Common.GameMode)1)
         {
-            Debug.Log("TriggerSpawnCoroutine");
-            yield return new WaitForSeconds(Random.Range(1, 3));
+            if (SpritArr.Count < 5)
+            {
+                // print("生成碎片，目前总数：" + SpritArr.Count);
+                Vector2 pos = bronPoint.GetRandomTrans().position;
+                GameObject _sprite = Instantiate(AssetConfig.GetPrefabByName("sprite"), pos, Quaternion.identity);
+                SpritArr.Add(_sprite.GetComponent<EnegySprite>());
+            }
+            yield return new WaitForSeconds(Random.Range(3, 7));
         }
     }
 }

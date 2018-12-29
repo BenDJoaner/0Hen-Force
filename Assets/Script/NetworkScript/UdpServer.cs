@@ -6,7 +6,8 @@ using System.Text;
 using System.Threading;
 using UnityEngine;
 
-public class UdpServer : MonoBehaviour {
+public class UdpServer : MonoBehaviour
+{
 
     //以下默认都是私有的成员 
     private int bcPort = 8001;//广播端口  
@@ -32,15 +33,21 @@ public class UdpServer : MonoBehaviour {
         //定义客户端
         IPEndPoint sender = new IPEndPoint(IPAddress.Any, 0);
         clientEnd = (EndPoint)sender;
-        //print("等待 UDP dgram");
         sendStr = PlayerPrefs.GetString("PlayerName");
         //开启一个线程连接，必须的，否则主线程卡死
         connectThread = new Thread(new ThreadStart(SocketReceive));
         connectThread.Start();
+        print("启动UDP主机端广播：" + ipEnd);
+    }
+
+    void Update()
+    {
+        if (socketColdTime < 0.5) socketColdTime += Time.deltaTime;
     }
 
     void SocketSend()
     {
+        print("发送房间消息给客户端：" + clientEnd);
         //清空发送缓存
         sendData = new byte[1024];
         //数据类型转换
@@ -49,6 +56,7 @@ public class UdpServer : MonoBehaviour {
         socket.SendTo(sendData, sendData.Length, SocketFlags.None, clientEnd);
     }
 
+    float socketColdTime = 0;
     //服务器接收
     void SocketReceive()
     {
@@ -61,9 +69,10 @@ public class UdpServer : MonoBehaviour {
             recvLen = socket.ReceiveFrom(recvData, ref clientEnd);
             //输出接收到的数据
             recvStr = Encoding.ASCII.GetString(recvData, 0, recvLen);
-            print("房主-检测到玩家：" + recvStr+ "\nIP：" + clientEnd.ToString());
+            print("房主-检测到玩家：" + recvStr + "\nIP：" + clientEnd.ToString());
             //将接收到的数据经过处理再发送出去
             SocketSend();
+            socketColdTime = 0;
         }
     }
 
@@ -75,11 +84,11 @@ public class UdpServer : MonoBehaviour {
         {
             connectThread.Interrupt();
             connectThread.Abort();
+            print("关闭UDP广播");
         }
         //最后关闭socket
         if (socket != null)
             socket.Close();
-        //print("关闭UDP广播");
     }
 
     void OnApplicationQuit()

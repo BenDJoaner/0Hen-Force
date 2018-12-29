@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Net;
+using System.Net.Sockets;
 using Prototype.NetworkLobby;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -55,6 +57,7 @@ public class LHLobbyManager : NetworkLobbyManager
     [HideInInspector]
     public int _playerNumber = 0;
 
+    IPAddress ivp4;
     //目前匹配ID
     protected ulong _currentMatchID;
 
@@ -83,6 +86,17 @@ public class LHLobbyManager : NetworkLobbyManager
         GetComponent<Canvas>().enabled = true;
         SetServerInfo("离线", "获取 IP 中......");
         DontDestroyOnLoad(gameObject);
+
+        Application.targetFrameRate = 60;
+
+        IPAddress[] ips = Dns.GetHostAddresses(Dns.GetHostName());   //Dns.GetHostName()获取本机名Dns.GetHostAddresses()根据本机名获取ip地址组
+        foreach (IPAddress ip in ips)
+        {
+            if (ip.AddressFamily == AddressFamily.InterNetwork)
+            {
+                ivp4 = ip;
+            }
+        }
     }
 
     /// <summary>
@@ -91,12 +105,13 @@ public class LHLobbyManager : NetworkLobbyManager
     /// <param name="newPanel">New panel.</param>
     public void ChangeTo(RectTransform newPanel)
     {
+        networkAddress = ivp4.ToString();
         if (currentPanel != null)
         {
             // currentPanel.gameObject.SetActive(false);
-            if(currentPanel.GetComponent<Animator>())
+            if (currentPanel.GetComponent<Animator>())
                 currentPanel.GetComponent<Animator>().SetTrigger("close");
-            if(currentPanel==mainMenuPanel)
+            if (currentPanel == mainMenuPanel)
                 currentPanel.gameObject.SetActive(false);
         }
 
@@ -123,7 +138,8 @@ public class LHLobbyManager : NetworkLobbyManager
         }
     }
 
-    private void ClosePanel(){
+    private void ClosePanel()
+    {
         currentPanel.gameObject.SetActive(false);
     }
 
@@ -303,8 +319,11 @@ public class LHLobbyManager : NetworkLobbyManager
         }
 
         if (allready)
+        {
+            UServer.SocketQuit();
             StartCoroutine(ServerCountdownCoroutine());
-            //infoPanel.Display("注意！有一支队伍的人数为空，这将导致游戏无法进行，确定这样进入游戏吗？", "取消", () => { this.ServerChangeScene(playScene); });
+            // infoPanel.Display("注意！有一支队伍的人数为空，确定这样进入游戏吗？", "取消", () => { this.ServerChangeScene(playScene); });
+        }
     }
 
     public IEnumerator ServerCountdownCoroutine()
@@ -416,6 +435,7 @@ public class LHLobbyManager : NetworkLobbyManager
     /// </summary>
     public void DisplayIsConnecting()
     {
+        UClient.SocketQuit();
         var _this = this;
         infoPanel.Display("等待房间响应...", "取消", () => { _this.backDelegate(); });
     }

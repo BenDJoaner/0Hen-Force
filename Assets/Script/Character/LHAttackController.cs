@@ -38,14 +38,17 @@ public class LHAttackController : MonoBehaviour
     {
         if (InitDone || data == null) return;
         _data = data;
-        if(data.shooterModule && !data.autoAim)
+        if (data.shooterModule && !data.autoAim)
         {
             m_PointerCheck.SetActive(true);
             parabola.shootForce = data.luanchForce;
-            if(!data.aimContorlable){
+            if (!data.aimContorlable)
+            {
                 m_PointerCheck.transform.eulerAngles = new Vector3(0, 0, data.luanchAngle);
             }
-        }else{
+        }
+        else
+        {
             m_PointerCheck.SetActive(false);
         }
         InitDone = true;
@@ -58,10 +61,10 @@ public class LHAttackController : MonoBehaviour
         {
             _joystick.x = CnInputManager.GetAxis("Horizontal");
             _joystick.y = CnInputManager.GetAxis("Vertical");
-            m_attack = CnInputManager.GetButtonDown("Fire1");
+            m_attack = CnInputManager.GetButtonDown("attack");
 
             AimFunc();
-            
+
             if (m_attack)
             {
                 GetComponentInChildren<Animator>().SetTrigger("attack");

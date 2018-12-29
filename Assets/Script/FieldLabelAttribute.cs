@@ -1,4 +1,5 @@
 ﻿
+#if UNITY_EDITOR
 using System;
 using UnityEditor;
 using UnityEngine;
@@ -28,3 +29,4 @@ public class FieldLabelDrawer : PropertyDrawer
         EditorGUI.PropertyField(position, property, new GUIContent(FLAttribute.label), true);
     }
 }
+#endif

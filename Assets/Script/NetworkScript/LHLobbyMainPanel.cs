@@ -36,5 +36,6 @@ public class LHLobbyMainPanel : MonoBehaviour
         lobbyManager.ChangeTo(JoinPanel);
         lobbyManager.UClient.InitSocket();
         lobbyManager.backDelegate = lobbyManager.ChangetoMainMenu;
+        JoinPanel.GetComponent<LobbyJoinPanel>().IpInput.text = lobbyManager.networkAddress;
     }
 }
