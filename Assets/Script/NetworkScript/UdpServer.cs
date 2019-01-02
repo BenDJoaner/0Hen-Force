@@ -37,7 +37,6 @@ public class UdpServer : MonoBehaviour
         //开启一个线程连接，必须的，否则主线程卡死
         connectThread = new Thread(new ThreadStart(SocketReceive));
         connectThread.Start();
-        print("启动UDP主机端广播：" + ipEnd);
     }
 
     void Update()

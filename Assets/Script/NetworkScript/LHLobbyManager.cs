@@ -186,7 +186,7 @@ public class LHLobbyManager : NetworkLobbyManager
         backDelegate = StopHostClbk;
         SetServerInfo("房主", "房间 IP：" + networkAddress);
         UServer.InitSocket();
-
+        print("启动UDP主机端广播：" + networkAddress);
     }
 
     //停止主机回调

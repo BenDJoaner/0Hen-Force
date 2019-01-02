@@ -13,7 +13,7 @@ public class CharacterConfig : MonoBehaviour
         return CharList;
     }
 
-    public List<CharacterData> GetCharListByPos(CharacterData.PosEnum pos)
+    public List<CharacterData> GetCharListByPos(Common.PosEnum pos)
     {
         List<CharacterData> arr = new List<CharacterData> { };
         foreach (CharacterData item in CharList)

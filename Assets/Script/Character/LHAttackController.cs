@@ -67,7 +67,7 @@ public class LHAttackController : MonoBehaviour
 
             if (m_attack)
             {
-                GetComponentInChildren<Animator>().SetTrigger("attack");
+                _data.OnFire();
             }
             else
             {

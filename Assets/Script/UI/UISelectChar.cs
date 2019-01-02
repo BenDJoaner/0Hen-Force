@@ -18,7 +18,7 @@ public class UISelectChar : MonoBehaviour
     LHNetworkPlayer LocalPlayer;
     // LHNetworkGameManager manager;
     CharacterConfig charListObj;
-    string[] PosList = new string[] { "迅捷", "强攻", "支援" };
+
     int PosIndex;
     CharacterData selectedChar = null;//选择的角色
     // Use this for initialization
@@ -54,7 +54,7 @@ public class UISelectChar : MonoBehaviour
             Debug.LogError("没有角色数据！");
             return;
         }
-        Pos.text = PosList[PosIndex];//定位文字
+        Pos.text = Common.PosList[PosIndex];//定位文字
 
         foreach (RectTransform chiled in CharTable)
         {
@@ -66,13 +66,13 @@ public class UISelectChar : MonoBehaviour
         switch (PosIndex)
         {
             case 0:
-                tempArr = charListObj.GetCharListByPos(CharacterData.PosEnum.SLIPPY);
+                tempArr = charListObj.GetCharListByPos((Common.PosEnum)0);
                 break;
             case 1:
-                tempArr = charListObj.GetCharListByPos(CharacterData.PosEnum.ATTACK);
+                tempArr = charListObj.GetCharListByPos((Common.PosEnum)1);
                 break;
             case 2:
-                tempArr = charListObj.GetCharListByPos(CharacterData.PosEnum.SUPPORT);
+                tempArr = charListObj.GetCharListByPos((Common.PosEnum)2);
                 break;
                 // default:
                 //     Debug.LogError("无此类型角色：" + PosIndex);

@@ -30,13 +30,13 @@ public class PlayerCanvaFollow : MonoBehaviour
     {
         // only update lookahead pos if accelerating or changed direction
         //float xMoveDelta = (target.position - m_LastTargetPosition).x;
-
-        Vector3 aheadTargetPos = target.position + m_LookAheadPos + Vector3.forward * m_OffsetZ;
-        Vector3 newPos = Vector3.SmoothDamp(transform.position, aheadTargetPos, ref m_CurrentVelocity, damping);
-
-        transform.position = newPos;
-
-        m_LastTargetPosition = target.position;
+        if (target)
+        {
+            Vector3 aheadTargetPos = target.position + m_LookAheadPos + Vector3.forward * m_OffsetZ;
+            Vector3 newPos = Vector3.SmoothDamp(transform.position, aheadTargetPos, ref m_CurrentVelocity, damping);
+            transform.position = newPos;
+            m_LastTargetPosition = target.position;
+        }
     }
 
     /// <summary>

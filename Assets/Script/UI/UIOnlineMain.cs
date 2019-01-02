@@ -27,23 +27,18 @@ public class UIOnlineMain : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
-    {
-        if (countDown > 0)
-        {
-            countDown -= Time.deltaTime;
-            countDownText.text = Common.ScontToTime(countDown);
-        }
+    void Update() { }
 
+    public void SetTime(float t)
+    {
+        countDownText.text = Common.ScontToTime(t);
     }
 
     public void OnModeChange(int index)
     {
         currentStep = (Common.GameMode)index;
-        countDown = Common.timeList[index];
-
-        if (index != 0)
-            for (int i = 1; i < pice_1_Arr.Length; i++)
+        if (currentStep != Common.GameMode.step_1)
+            for (int i = 1; i <= pice_1_Arr.Length; i++)
             {
                 pice_1_Arr[i - 1].gameObject.SetActive(false);
                 pice_2_Arr[i - 1].gameObject.SetActive(false);
@@ -69,10 +64,14 @@ public class UIOnlineMain : MonoBehaviour
         team_1_Slider.value = team_1_Num;
         team_2_Slider.value = team_2_Num;
         // print("OnValueChange:" + team_1_Num + "/" + team_2_Num);
-        for (int i = 1; i < pice_1_Arr.Length; i++)
+        if (currentStep == Common.GameMode.step_1)
         {
-            pice_1_Arr[i - 1].transform.Find("point").gameObject.SetActive(team_1_Num >= i);
-            pice_2_Arr[i - 1].transform.Find("point").gameObject.SetActive(team_2_Num >= i);
+            for (int i = 1; i <= pice_1_Arr.Length; i++)
+            {
+                // print(i + "/" + pice_1_Arr.Length + " team_1_Num:" + team_1_Num);
+                pice_1_Arr[i - 1].transform.Find("point").gameObject.SetActive(team_1_Num >= i);
+                pice_2_Arr[i - 1].transform.Find("point").gameObject.SetActive(team_2_Num >= i);
+            }
         }
     }
 }

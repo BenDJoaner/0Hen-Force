@@ -7,14 +7,12 @@ using UnityEngine.Networking;
 public class LHPlayerController : NetworkBehaviour
 {
     //初始化参数（NetworkPlayer传入）
-    private float m_MaxSpeed;
-    private float m_JumpForce;
-    private bool m_AirControl;
+    private CharacterData _data;
 
     const float k_GroundedRadius = .2f;
     const float k_CeilingRadius = .01f;
     private Transform m_GroundCheck;
-    //[FieldLabel("地面图层")]
+    [FieldLabel("地面图层")]
     public LayerMask m_WhatIsGround;//地面层级
     public Animator m_Anim;
     private Rigidbody2D m_Rigidbody2D;
@@ -31,10 +29,9 @@ public class LHPlayerController : NetworkBehaviour
     [HideInInspector]
     public float uncontrolTime = 0;
     [HideInInspector]
-    public BeEffect state = BeEffect.NONE;
+    public Common.AttackEffect state = (Common.AttackEffect)0;
 
     //普通变量
-    private bool m_Grounded = true;
     private bool initDone;
     private bool m_Jump;
     [HideInInspector]
@@ -42,17 +39,6 @@ public class LHPlayerController : NetworkBehaviour
     private float jump_cold;
 
     LHNetworkPlayer _player;
-
-    public enum BeEffect
-    {
-        NONE = 0,           //正常
-        REPEL = 1,          //击退
-        CHARM = 2,          //魅惑
-        FEAR = 3,           //恐惧
-        CONFINE = 4,        //禁锢
-        DECELERATE = 5,     //减速
-        CONGEAL = 6,        //凝滞
-    }
 
     // Use this for initialization
     void Awake()
@@ -65,7 +51,9 @@ public class LHPlayerController : NetworkBehaviour
 
     public void OnMyColor(Color color)
     {
-        //TODO：设置名字颜色
+        //TODO：角色颜色
+        _color = color;
+        // GetComponentInChildren<SpriteRenderer>().color = _color;
     }
 
     public void OnMyFacing(bool Flag)
@@ -92,9 +80,7 @@ public class LHPlayerController : NetworkBehaviour
     public void DataInit(CharacterData data)
     {
         if (initDone || data == null) return;
-        m_JumpForce = data.jumpForce;
-        m_MaxSpeed = data.moveSpeed;
-        m_AirControl = data.airContorl;
+        _data = data;
         m_Rigidbody2D.gravityScale = data.weight;
         m_Anim = data.OnGetAnimator();
         initDone = true;
@@ -117,51 +103,25 @@ public class LHPlayerController : NetworkBehaviour
 
     void FixedUpdate()
     {
-        if (!hasAuthority)
-            return;
-
-        m_Grounded = GroundCheck();
-
-        _joystick.x = CnInputManager.GetAxis("Horizontal");
-        _joystick.y = CnInputManager.GetAxis("Vertical");
-
         if (initDone)
         {
-            if (state == BeEffect.NONE || state == BeEffect.DECELERATE)
-            {
-                Move(_joystick.x, m_Jump);
-            }
-            else if (state == BeEffect.REPEL)
-            {
-
-            }
-            else if (state == BeEffect.CHARM || state == BeEffect.FEAR)
-            {
-
-            }
-            else if (state == BeEffect.CONFINE || state == BeEffect.DECELERATE || state == BeEffect.CONGEAL)
-            {
-
-            }
+            if (!hasAuthority) return;
+            _joystick.x = CnInputManager.GetAxis("Horizontal");
+            _joystick.y = CnInputManager.GetAxis("Vertical");
+            //动画
+            Move(_joystick.x, m_Jump);
+            CmdBoolAnim("Ground", GroundCheck());
         }
-
-        //动画
-        if (m_Grounded)
-        {
-            CmdBoolAnim("Ground", m_Grounded);
-            CmdNumAnim("vSpeed", m_Rigidbody2D.velocity.y);
-        }
-
     }
 
     void Move(float move, bool jump)
     {
         if (!isLocalPlayer) return;
-        if (m_Grounded || m_AirControl)
+        if (GroundCheck() || _data.airContorl)
         {
             CmdNumAnim("Speed", Mathf.Abs(move));
 
-            m_Rigidbody2D.velocity = new Vector2(move * m_MaxSpeed, m_Rigidbody2D.velocity.y);
+            m_Rigidbody2D.velocity = new Vector2(move * _data.moveSpeed, m_Rigidbody2D.velocity.y);
 
             //==================翻转角色测试==================
             if (move > 0 && !m_FacingRight)
@@ -173,11 +133,9 @@ public class LHPlayerController : NetworkBehaviour
                 m_FacingRight = !m_FacingRight;
             }
         }
-        if (m_Grounded && jump)
+        if (GroundCheck() && jump)
         {
-            m_Grounded = false;
-            CmdBoolAnim("Ground", false);
-            m_Rigidbody2D.AddForce(new Vector2(0f, m_JumpForce));
+            m_Rigidbody2D.AddForce(new Vector2(0f, _data.jumpForce));
             m_Jump = false;
             jump_cold = 0.4f;
         }
@@ -201,22 +159,12 @@ public class LHPlayerController : NetworkBehaviour
 
     }
 
-    // void FaceTo(Vector3 pos)
-    // {
-    //     float delta = transform.position.x - pos.x;
-    //     float x = delta > 0 ? 0 : 180;
-
-    //     transform.eulerAngles = new Vector3(0, x, 0);
-    //     selfRote = transform.rotation;
-    // }
-
     //落地检测
     bool GroundCheck()
     {
         Collider2D[] colliders = Physics2D.OverlapCircleAll(m_GroundCheck.position, k_GroundedRadius, m_WhatIsGround);
         for (int i = 0; i < colliders.Length; i++)
         {
-            // print("colliders" + colliders[i]);
             if (colliders[i].gameObject != gameObject)
             {
                 return true;

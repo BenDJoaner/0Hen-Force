@@ -22,6 +22,7 @@ public class LHNetworkGameManager : NetworkBehaviour
 
     public float team_1_Num;
     public float team_2_Num;
+    public float countDown = 0;
 
     void Awake()
     {
@@ -41,7 +42,7 @@ public class LHNetworkGameManager : NetworkBehaviour
         //     // sPlayer[i].Init();
         // }
         ui_select.gameObject.SetActive(true);
-        ui_main.OnModeChange(0);
+        ui_main.OnModeChange(1);
     }
 
     [ServerCallback]
@@ -53,16 +54,50 @@ public class LHNetworkGameManager : NetworkBehaviour
         {
             StartCoroutine(ReturnToLoby());
         }
-        if ((team_2_Num >= 6 || team_1_Num >= 6) && currentStep == (Common.GameMode)1)
+        else
         {
-            currentStep = (Common.GameMode)2;
-            DestroyAllSprite();
-            ui_main.OnModeChange(1);
-        }
-        if (currentStep == (Common.GameMode)2)
-        {
+            if ((team_2_Num >= Common.Step_1_Sum || team_1_Num >= Common.Step_1_Sum) && currentStep == (Common.GameMode)1)
+            {
+                currentStep = (Common.GameMode)2;
+                DestroyAllSprite();
+                ui_main.OnModeChange(2);
+                countDown = Common.timeList[2];
 
+                /*用于测试的数据： */
+                team_1_Num = 6;
+                team_2_Num = 6;
+            }
+            if (currentStep == (Common.GameMode)2)
+            {
+                if (countDown > 0)
+                {
+                    countDown -= Time.deltaTime;
+                    ui_main.SetTime(countDown);
+                    if (team_1_Num <= 0 || team_2_Num <= 0)
+                    {
+                        _running = false;
+                    }
+                    else
+                    {
+                        team_1_Num -= Time.deltaTime * Common.decTime_1;
+                        team_2_Num -= Time.deltaTime * Common.decTime_1;
+                    }
+                    ui_main.OnAddEnegy(1, team_1_Num);
+                    ui_main.OnAddEnegy(2, team_2_Num);
+                }
+                else
+                {
+
+                }
+
+            }
         }
+
+    }
+
+    void BattleResult()
+    {
+
     }
 
     public void Init(LHNetworkPlayer player)
@@ -104,9 +139,9 @@ public class LHNetworkGameManager : NetworkBehaviour
 
     IEnumerator ReturnToLoby()
     {
-        Debug.Log("ReturnToLoby");
+        // Debug.Log("ReturnToLoby");
         _running = false;
-        yield return new WaitForSeconds(3.0f);
+        yield return new WaitForSeconds(10.0f);
         LHLobbyManager.s_Singleton.ServerReturnToLobby();
     }
 
