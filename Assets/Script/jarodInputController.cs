@@ -11,9 +11,7 @@ public class jarodInputController : MonoBehaviour
                                                                   //
                                                                   // private float fingerBeginX;
     private float fingerBeginY;
-    // private float fingerCurrentX;
     private float fingerCurrentY;
-    // private float fingerSegmentX;
     private float fingerSegmentY;
     //
     private int fingerTouchState;
@@ -38,49 +36,31 @@ public class jarodInputController : MonoBehaviour
     void Start()
     {
         fingerActionSensitivity = Screen.width * 0.05f;
-
-        // fingerBeginX = 0;
         fingerBeginY = 0;
-        // fingerCurrentX = 0;
         fingerCurrentY = 0;
-        // fingerSegmentX = 0;
         fingerSegmentY = 0;
-
         fingerTouchState = FINGER_STATE_NULL;
-
     }
     // Update is called once per frame
     void Update()
     {
-
         if (Input.touchCount > 0)
         {
-            print(Input.touchCount);
             Touch touchPos = Input.touchCount == 1 ? Input.GetTouch(0) : Input.GetTouch(1);
             if (fingerTouchState == FINGER_STATE_NULL)
             {
                 fingerTouchState = FINGER_STATE_TOUCH;
-                // fingerBeginX = touchPos.position.x;
                 fingerBeginY = touchPos.position.y;
-                print("Y:" + fingerBeginY);
             }
-
         }
-
         if (fingerTouchState == FINGER_STATE_TOUCH)
         {
             Touch touchPos = Input.touchCount == 1 ? Input.GetTouch(0) : Input.GetTouch(1);
-            // fingerCurrentX = touchPos.position.x;
             fingerCurrentY = touchPos.position.y;
-            // fingerSegmentX = fingerCurrentX - fingerBeginX;
             fingerSegmentY = fingerCurrentY - fingerBeginY;
-
         }
-
-
         if (fingerTouchState == FINGER_STATE_TOUCH)
         {
-            // float fingerDistance = fingerSegmentX * fingerSegmentX + fingerSegmentY * fingerSegmentY;
             float fingerDistance = fingerSegmentY * fingerSegmentY;
 
             if (fingerDistance > (fingerActionSensitivity * fingerActionSensitivity))
@@ -88,53 +68,19 @@ public class jarodInputController : MonoBehaviour
                 toAddFingerAction();
             }
         }
-
         if (Input.touchCount <= 1)
         {
             fingerTouchState = FINGER_STATE_NULL;
-            //CrossPlatformInputManager.SetButtonUp("Jump");
             _virtualButton.Release();
         }
     }
 
     private void toAddFingerAction()
     {
-
         fingerTouchState = FINGER_STATE_ADD;
-
-        // if (Mathf.Abs(fingerSegmentX) > Mathf.Abs(fingerSegmentY))
-        // {
-        //     fingerSegmentY = 0;
-        // }
-        // else
-        // {
-        //     fingerSegmentX = 0;
-        // }
-
-        // if (fingerSegmentX == 0)
-        // {
         if (fingerSegmentY > 0)
         {
-            //Debug.Log("up");
-            //CrossPlatformInputManager.SetButtonDown("Jump");
             _virtualButton.Press();
         }
-        else
-        {
-            //Debug.Log("down");
-        }
-        // }
-        //else if (fingerSegmentY == 0)
-        //{
-        //    if (fingerSegmentX > 0)
-        //    {
-        //        //Debug.Log("right");
-        //    }
-        //    else
-        //    {
-        //        //Debug.Log("left");
-        //    }
-        //}
-
     }
 }

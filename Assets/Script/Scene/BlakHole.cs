@@ -33,8 +33,7 @@ public class BlakHole : MonoBehaviour
             EnegySprite _eSprit = player.GetEnegySprite();
             if (_eSprit)
             {
-                Instantiate(AssetConfig.GetPrefabByName("UseEnegyParticle"), _eSprit.gameObject.transform.position, Quaternion.identity);
-                Destroy(_eSprit.gameObject);
+                _eSprit.OnSelfDestory();
                 manager.OnUseEnegy(player);
                 coldTime = 0;
             }

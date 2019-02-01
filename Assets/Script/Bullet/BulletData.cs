@@ -50,6 +50,11 @@ public class BulletData : NetworkBehaviour
         Destroy(gameObject, LifeTime);
     }
 
+    public void OnCreated(Transform trans)
+    {
+
+    }
+
     [ClientCallback]
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -64,4 +69,6 @@ public class BulletData : NetworkBehaviour
             if (other.GetComponent<LHNetworkPlayer>().team == _borner.team && !TeamEffect) return;
         }
     }
+
+
 }

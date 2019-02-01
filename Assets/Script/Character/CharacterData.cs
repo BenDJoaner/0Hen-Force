@@ -156,8 +156,18 @@ public class CharacterData : MonoBehaviour
 
     //=============Override方法=================
 
+    // List<Transform> luanchTrans = new List<Transform>();
     public virtual void OnFire()
     {
+        foreach (Transform chiled in transform)
+        {
+            if (chiled.name == "LuanchPoint")
+            {
+                // luanchTrans.Add(chiled);
+                GameObject tempBullet = GameObject.Instantiate(bullet.gameObject);
+                tempBullet.GetComponent<BulletData>().OnCreated(chiled);
+            }
+        }
         GetComponent<Animator>().SetTrigger("attack");
     }
 

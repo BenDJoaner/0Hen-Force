@@ -10,6 +10,7 @@ public class LHNetworkGameManager : NetworkBehaviour
     // static public LHNetworkGameManager sInstance = null;
     public LHNetworkPlayer localPlayer;
     public UISelectChar ui_select;
+    public UICountDown ui_countdown;
     public UIOnlineMain ui_main;
     public BronTransConfig bronPoint;
     Common.GameMode currentStep = (Common.GameMode)1;
@@ -134,7 +135,12 @@ public class LHNetworkGameManager : NetworkBehaviour
                 ui_main.OnAddEnegy(teamIndex, team_2_Num);
                 break;
         }
-        SpritArr.Remove(player.GetEnegySprite());
+        RemoveSprite(player.GetEnegySprite());
+    }
+
+    public void RemoveSprite(EnegySprite obj)
+    {
+        SpritArr.Remove(obj);
     }
 
     IEnumerator ReturnToLoby()

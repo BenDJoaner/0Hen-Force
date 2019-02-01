@@ -64,7 +64,8 @@ public class LHNetworkPlayer : NetworkBehaviour
         if (_wasInit || data == null)
             return;
         //生成玩家对象
-        hero = Instantiate(data.gameObject, transform.position, Quaternion.identity);       //生成Char
+        infoCanva.OnSetPlayerName(playerName);
+        hero = Instantiate(data.gameObject, transform.position, transform.rotation);       //生成Char
         hero.transform.SetParent(gameObject.transform, true);
         //传送数据
         this._data = data;
@@ -98,7 +99,8 @@ public class LHNetworkPlayer : NetworkBehaviour
         if (_shootingTimer > 0)
             _shootingTimer -= Time.deltaTime;
 
-        if (transform.position.y < -20 || transform.position.x < -30 || transform.position.x > 30) ResetPlayer();
+        if (transform.position.y < -20 || transform.position.x < -30 || transform.position.x > 30)
+            ResetPlayer();
 
         if (luachFlag)
         {
@@ -119,7 +121,8 @@ public class LHNetworkPlayer : NetworkBehaviour
 
     public void ResetPlayer()
     {
-        manager.ui_select.gameObject.SetActive(true);
+        manager.ui_countdown.gameObject.SetActive(true);
+        manager.ui_countdown.SetCountDownDown(3, manager.ui_select);
         _wasInit = false;
         _data = null;
         transform.position = new Vector3(0, 0, 0);
@@ -128,6 +131,12 @@ public class LHNetworkPlayer : NetworkBehaviour
         GetComponent<LHPlayerController>().enabled = false;
         GetComponent<LHAttackController>().InitDone = false;
         GetComponent<Rigidbody2D>().Sleep();
+        infoCanva.OnSetPlayerName("");
+        if (_carrySprite)
+        {
+            manager.RemoveSprite(_carrySprite);
+            _carrySprite.OnSelfDestory();
+        }
     }
 
     public bool CarrySprite(EnegySprite obj)

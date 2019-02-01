@@ -60,7 +60,7 @@ public class UISelectChar : MonoBehaviour
         {
             Destroy(chiled.gameObject);
         }
-
+        curSelectingBtn = null;
         List<CharacterData> tempArr = new List<CharacterData> { };
 
         switch (PosIndex)
@@ -81,26 +81,36 @@ public class UISelectChar : MonoBehaviour
 
         //if (tempArr.Count >= 0) return;
 
-        Button iteam = AssetConfig.GetPrefabByName("CharBtnIteam").GetComponent<Button>();
+        GameObject iteam = AssetConfig.GetPrefabByName("CharBtnIteam");
         foreach (CharacterData data in tempArr)
         {
             //print(data.charID);
-            Button CharBtn = Instantiate(iteam);
-            CharBtn.transform.SetParent(CharTable, true);
+            Button CharBtn = Instantiate(iteam).GetComponent<Button>();
+            if (!curSelectingBtn)
+            {
+                //翻页默认选择第一个
+                SelectCharactorFunc(data.id);
+                curSelectingBtn = CharBtn.transform.Find("selected").gameObject;
+                curSelectingBtn.SetActive(true);
+            }
+            CharBtn.transform.SetParent(CharTable, false);
             CharBtn.transform.Find("Image").GetComponent<Image>().sprite = data.image;
             CharBtn.onClick.AddListener(delegate ()
             {
                 SelectCharactorFunc(data.id);
+                curSelectingBtn.SetActive(false);
+                curSelectingBtn = CharBtn.transform.Find("selected").gameObject;
+                curSelectingBtn.SetActive(true);
             });
         }
-        //翻页默认选择第一个
-        SelectCharactorFunc(tempArr[0].id);
+
     }
 
     /// <summary>
     /// 根据设置角色相关信息
     /// </summary>
     /// <param name="data"></param>
+    GameObject curSelectingBtn;
     void OnSetInfo(CharacterData data)
     {
         // print("根据设置角色相关信息:" + data.charName);

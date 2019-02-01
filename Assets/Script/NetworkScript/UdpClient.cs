@@ -25,28 +25,28 @@ public class UdpClient : MonoBehaviour
     //初始化
     public void InitSocket()
     {
-        IPAddress[] ips = Dns.GetHostAddresses(Dns.GetHostName());   //Dns.GetHostName()获取本机名Dns.GetHostAddresses()根据本机名获取ip地址组
-        foreach (IPAddress ip in ips)
-        {
-            if (ip.AddressFamily == AddressFamily.InterNetwork)
-            {
-                ipv4 = ip;
-            }
-        }
-        //定义连接的服务器ip和端口，可以是本机ip，局域网，互联网
-        ipEnd = new IPEndPoint(ipv4, bcPort);
-        //定义套接字类型,在主线程中定义
-        socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-        //定义服务端
-        IPEndPoint sender = new IPEndPoint(IPAddress.Any, 0);
-        serverEnd = (EndPoint)sender;
-        //建立初始连接，这句非常重要，第一次连接初始化了serverEnd后面才能收到消息
-        SocketSend("Client:" + ipv4.ToString());
-        //开启一个线程连接，必须的，否则主线程卡死
-        connectThread = new Thread(new ThreadStart(SocketReceive));
-        connectThread.Start();
-        print("启动UDP客户端监听");
-        manager = GetComponent<LHLobbyManager>();
+        // IPAddress[] ips = Dns.GetHostAddresses(Dns.GetHostName());   //Dns.GetHostName()获取本机名Dns.GetHostAddresses()根据本机名获取ip地址组
+        // foreach (IPAddress ip in ips)
+        // {
+        //     if (ip.AddressFamily == AddressFamily.InterNetwork)
+        //     {
+        // ipv4 = IPAddress.Parse("255.255.255.255");
+        // //     }
+        // // }
+        // //定义连接的服务器ip和端口，可以是本机ip，局域网，互联网
+        // ipEnd = new IPEndPoint(ipv4, bcPort);
+        // //定义套接字类型,在主线程中定义
+        // socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+        // //定义服务端
+        // IPEndPoint sender = new IPEndPoint(IPAddress.Any, 0);
+        // serverEnd = (EndPoint)sender;
+        // //建立初始连接，这句非常重要，第一次连接初始化了serverEnd后面才能收到消息
+        // SocketSend("Client:" + ipv4.ToString());
+        // //开启一个线程连接，必须的，否则主线程卡死
+        // connectThread = new Thread(new ThreadStart(SocketReceive));
+        // connectThread.Start();
+        // print("启动UDP客户端监听");
+        // manager = GetComponent<LHLobbyManager>();
     }
 
     void SocketSend(string sendStr)
