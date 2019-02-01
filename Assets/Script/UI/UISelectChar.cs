@@ -14,6 +14,7 @@ public class UISelectChar : MonoBehaviour
     public Button formPageBtn;
     public Button backPageBtn;
     public Button useCharBtn;
+    public Toggle[] toggleGroup;
 
     LHNetworkPlayer LocalPlayer;
     // LHNetworkGameManager manager;
@@ -28,6 +29,38 @@ public class UISelectChar : MonoBehaviour
         formPageBtn.onClick.AddListener(FromtPage);
         backPageBtn.onClick.AddListener(BackPange);
         useCharBtn.onClick.AddListener(OnClickeUseChar);
+        // for (int i = 0; i < toggleGroup.Length - 1; i++)
+        // {
+        //     toggleGroup[i].onValueChanged.AddListener(delegate (bool flag)
+        //     {
+        //         if (flag)
+        //         {
+        //             OnChangeTab(i);
+        //         }
+        //     });
+        // }
+        toggleGroup[0].onValueChanged.AddListener(delegate (bool flag)
+            {
+                if (flag && PosIndex != 0)
+                {
+                    OnChangeTab(0);
+                }
+            });
+        toggleGroup[1].onValueChanged.AddListener(delegate (bool flag)
+            {
+                if (flag && PosIndex != 1)
+                {
+                    OnChangeTab(1);
+                }
+            });
+        toggleGroup[2].onValueChanged.AddListener(delegate (bool flag)
+            {
+                if (flag && PosIndex != 2)
+                {
+                    OnChangeTab(2);
+                }
+            });
+
     }
 
     /// <summary>
@@ -145,6 +178,12 @@ public class UISelectChar : MonoBehaviour
     public int GetCharID()
     {
         return selectedChar.id;
+    }
+
+    public void OnChangeTab(int index)
+    {
+        PosIndex = index;
+        OnSetArrData();
     }
 
     /// <summary>
