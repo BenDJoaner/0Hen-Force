@@ -29,6 +29,8 @@ public class LHNetworkPlayer : NetworkBehaviour
 
     LHNetworkGameManager manager;
     PlayerCanvaFollow infoCanva;
+    LHPlayerController controller;
+    CircleCollider2D colloder;
 
     protected bool _wasInit = false;
     EnegySprite _carrySprite;
@@ -43,7 +45,8 @@ public class LHNetworkPlayer : NetworkBehaviour
     private void Start()
     {
         // manager = LHNetworkGameManager.sInstance;
-
+        colloder = GetComponent<CircleCollider2D>();
+        controller = GetComponent<LHPlayerController>();
         pCanva = Instantiate(AssetConfig.GetPrefabByName("PlayerCanvas"), transform.position, Quaternion.identity);
         infoCanva = pCanva.GetComponent<PlayerCanvaFollow>();
         infoCanva.OnSetTargetTransform(gameObject.transform);
@@ -70,8 +73,9 @@ public class LHNetworkPlayer : NetworkBehaviour
         //传送数据
         this._data = data;
         _wasInit = true;
-        GetComponent<LHPlayerController>().enabled = true;
+        controller.enabled = true;
         GetComponent<Rigidbody2D>().WakeUp();
+
     }
 
     [ClientCallback]
@@ -83,14 +87,14 @@ public class LHNetworkPlayer : NetworkBehaviour
             if (isLocalPlayer)
             {
                 manager.Init(this);
-                GetComponent<CircleCollider2D>().enabled = true;
+                colloder.enabled = true;
                 // GetComponent<PlatformEffector2D>().enabled = true;
                 GameObject.FindGameObjectWithTag("CameraHolder").GetComponent<CameraControl>().Player = gameObject;
             }
             else
             {
                 // Destroy(GetComponent<PlatformEffector2D>());
-                GetComponent<CircleCollider2D>().enabled = false;
+                colloder.enabled = false;
             }
         }
         if (!isLocalPlayer) return;
@@ -105,10 +109,11 @@ public class LHNetworkPlayer : NetworkBehaviour
         if (luachFlag)
         {
             preAttackTime -= Time.deltaTime;
-            if (preAttackTime <= 0)
+            if (preAttackTime < 0)
             {
                 luachFlag = false;
                 preAttackTime = 0;
+                controller.OnFire();
             }
         }
 
@@ -128,8 +133,8 @@ public class LHNetworkPlayer : NetworkBehaviour
         transform.position = new Vector3(0, 0, 0);
         GameObject.Destroy(hero);
         transform.eulerAngles = new Vector3(0, 0, 0);
-        GetComponent<LHPlayerController>().enabled = false;
-        GetComponent<LHAttackController>().InitDone = false;
+        controller.enabled = false;
+        controller.InitDone = false;
         GetComponent<Rigidbody2D>().Sleep();
         infoCanva.OnSetPlayerName("");
         if (_carrySprite)
@@ -154,7 +159,13 @@ public class LHNetworkPlayer : NetworkBehaviour
 
     public EnegySprite GetEnegySprite()
     {
-        return _carrySprite;
+        return _wasInit ? _carrySprite : null;
+    }
+
+    public void setLunchFlag()
+    {
+        luachFlag = true;
+        preAttackTime = _data.preAttackTime;
     }
 
 }

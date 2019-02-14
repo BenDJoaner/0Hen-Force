@@ -100,6 +100,7 @@ public class CharacterData : MonoBehaviour
 
     [FieldLabel("-子弹预设体")]
     public BulletData bullet;
+
     //====================突围灵痕========================
     [Space]
     [Tooltip("灵痕简介：本身就是战斗机器")]
@@ -155,22 +156,6 @@ public class CharacterData : MonoBehaviour
     }
 
     //=============Override方法=================
-
-    // List<Transform> luanchTrans = new List<Transform>();
-    public virtual void OnFire()
-    {
-        foreach (Transform chiled in transform)
-        {
-            if (chiled.name == "LuanchPoint")
-            {
-                // luanchTrans.Add(chiled);
-                GameObject tempBullet = GameObject.Instantiate(bullet.gameObject);
-                tempBullet.GetComponent<BulletData>().OnCreated(chiled);
-            }
-        }
-        GetComponent<Animator>().SetTrigger("attack");
-    }
-
     public virtual void OnHit(Common.AttackEffect effect)
     {
         switch (effect)

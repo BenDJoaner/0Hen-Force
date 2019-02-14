@@ -6,39 +6,37 @@ using UnityEngine.Networking;
 
 public class LHPlayerController : NetworkBehaviour
 {
-    //初始化参数（NetworkPlayer传入）
-    private CharacterData _data;
-
     const float k_GroundedRadius = .2f;
     const float k_CeilingRadius = .01f;
-    private Transform m_GroundCheck;
+    
     [FieldLabel("地面图层")]
     public LayerMask m_WhatIsGround;//地面层级
     public Animator m_Anim;
-    private Rigidbody2D m_Rigidbody2D;
 
-    //联网同步处理
     [SyncVar(hook = "OnMyFacing")]
     private bool m_FacingRight = true;
     [SyncVar(hook = "OnMyColor")]
     private Color _color;
     [SyncVar(hook = "OnMyRote")]
-    private Quaternion selfRote;
-
-    //特殊情况处理
     [HideInInspector]
     public float uncontrolTime = 0;
     [HideInInspector]
     public Common.AttackEffect state = (Common.AttackEffect)0;
-
-    //普通变量
+    private Rigidbody2D m_Rigidbody2D;
     private bool initDone;
     private bool m_Jump;
-    [HideInInspector]
+    private Transform m_GroundCheck;
     private Vector2 _joystick;//摇杆输入的量
     private float jump_cold;
-
+    private GameObject m_PointerCheck;
+    private Quaternion selfRote;
+    CharacterData _data;
+    //攻击控制相关
+    bool m_attack;
+    Parabola parabola;
     LHNetworkPlayer _player;
+
+    public bool InitDone { get => initDone; set => initDone = value; }
 
     // Use this for initialization
     void Awake()
@@ -46,6 +44,8 @@ public class LHPlayerController : NetworkBehaviour
         m_GroundCheck = transform.Find("GroundCheck");
         m_Rigidbody2D = GetComponent<Rigidbody2D>();
         _player = GetComponent<LHNetworkPlayer>();
+        m_PointerCheck = transform.Find("PointerCheck").gameObject;
+        parabola = m_PointerCheck.GetComponent<Parabola>();
     }
 
 
@@ -79,16 +79,29 @@ public class LHPlayerController : NetworkBehaviour
 
     public void DataInit(CharacterData data)
     {
-        if (initDone || data == null) return;
+        if (InitDone || data == null) return;
         _data = data;
         m_Rigidbody2D.gravityScale = data.weight;
         m_Anim = data.OnGetAnimator();
-        initDone = true;
+        if (data.shooterModule && !data.autoAim)
+        {
+            m_PointerCheck.SetActive(true);
+            parabola.shootForce = data.luanchForce;
+            if (!data.aimContorlable)
+            {
+                m_PointerCheck.transform.eulerAngles = new Vector3(0, 0, data.luanchAngle);
+            }
+        }
+        else
+        {
+            m_PointerCheck.SetActive(false);
+        }
+        InitDone = true;
     }
 
     void Update()
     {
-        if (!initDone)
+        if (!InitDone)
         {
             DataInit(_player._data);
         }
@@ -103,7 +116,7 @@ public class LHPlayerController : NetworkBehaviour
 
     void FixedUpdate()
     {
-        if (initDone)
+        if (InitDone)
         {
             if (!hasAuthority) return;
             _joystick.x = CnInputManager.GetAxis("Horizontal");
@@ -112,6 +125,36 @@ public class LHPlayerController : NetworkBehaviour
             Move(_joystick.x, m_Jump);
             CmdBoolAnim("Ground", GroundCheck());
         }
+
+        if (InitDone)
+        {
+            _joystick.x = CnInputManager.GetAxis("Horizontal");
+            _joystick.y = CnInputManager.GetAxis("Vertical");
+            m_attack = CnInputManager.GetButtonDown("attack");
+
+            AimFunc();
+
+            if (m_attack)
+            {
+                _player.setLunchFlag();
+                GetComponentInChildren<Animator>().SetTrigger("attack");
+            }
+            else
+            {
+
+            }
+        }
+    }
+
+    public void OnFire(){
+        LuanchPos[] posArr = GetComponentsInChildren<LuanchPos>();
+    }
+    void AimFunc()
+    {
+        if (!_data.aimContorlable) return;
+        if (_joystick == new Vector2(0, 0)) return;
+        float angle = Mathf.Atan2(_joystick.y, _joystick.x) * 180f / Mathf.PI;
+        m_PointerCheck.transform.eulerAngles = new Vector3(0, 0, angle);
     }
 
     void Move(float move, bool jump)

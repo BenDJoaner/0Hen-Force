@@ -50,7 +50,13 @@ public class BulletData : NetworkBehaviour
         Destroy(gameObject, LifeTime);
     }
 
-    public void OnCreated(Transform trans)
+    public void OnCreated(float force)
+    {
+        // transform.eulerAngles = trans.eulerAngles;
+        GetComponent<Rigidbody2D>().AddForce(Vector2.right * force * 100);
+        // trans.position = trans.position;
+    }
+    void FixedUpdate()
     {
 
     }
@@ -58,17 +64,22 @@ public class BulletData : NetworkBehaviour
     [ClientCallback]
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        GameObject other = collision.gameObject;
-        if (IsCarryer)
+        LHNetworkPlayer _player = collision.gameObject.GetComponent<LHNetworkPlayer>();
+        if (_player && (_player.team != _borner.team || TeamEffect))
         {
-            GameObject bullet = Instantiate(BornBullet.gameObject, transform.position, Quaternion.identity);
-            NetworkServer.Spawn(bullet);
-        }
-        else
-        {
-            if (other.GetComponent<LHNetworkPlayer>().team == _borner.team && !TeamEffect) return;
+            if (IsCarryer)
+            {
+                GameObject bullet = Instantiate(BornBullet.gameObject, transform.position, Quaternion.identity);
+                NetworkServer.Spawn(bullet);
+            }
+            else
+            {
+                //TODO:自身对敌人产生左右
+            }
+            if (!CrossOver)
+            {
+                Destroy(this.gameObject);
+            }
         }
     }
-
-
 }
